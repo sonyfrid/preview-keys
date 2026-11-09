@@ -349,6 +349,9 @@ footer{border-top-color:rgba(122,14,38,.2)}
 .stage-grid{transform:translateZ(0);isolation:isolate}
 .hand{transform-style:flat;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .key-layer{transform:translateZ(0)}
+
+/* Дверь, к которой поднесли ключ: подсвечивается, пока карусель не повернулась к ней */
+.door.peek .frame{box-shadow:0 0 0 2px var(--brass-2),0 0 34px 8px rgba(238,197,131,.7)}
 </style>
 </head>
 <body>
@@ -476,7 +479,7 @@ const items = DOORS.map(d => {
   add(left, "h3", "", d.title);
   add(right, "p", "key", d.key);
   add(right, "p", "text", d.text);
-  if (!d.locked) add(right, "p", "tap-hint", "Нажми на ключ у Юли во рту и наведи его на дверь");
+  if (!d.locked) add(right, "p", "tap-hint", "Нажми на ключ у Юли во рту и наведи его на дверь. Подержи над соседней, чтобы перейти к ней");
   box.append(left, right);
   $("infoStack").appendChild(box);
   return box;
@@ -615,11 +618,27 @@ addEventListener("pointermove", e => {
   if (dragging) touchDoor();
 }, {passive:true});
 addEventListener("scroll", () => { if (dragging) touchDoor(); }, {passive:true});
-function touchDoor() {
+// Ключ над соседней дверью полсекунды: карусель поворачивается к ней. Над текущей: дверь открывается
+let hoverDoor = -1, hoverTimer = null;
+function doorUnderKey() {
   const k = keyEl.getBoundingClientRect(), kx = k.left + k.width / 2, ky = k.top + k.height / 2;
-  const el = els[current], r = el.getBoundingClientRect();
-  const inside = kx > r.left && kx < r.right && ky > r.top && ky < r.bottom;
-  if (!inside || el.classList.contains("open")) return;
+  let best = -1, bz = -1;
+  els.forEach((el, i) => {
+    const r = el.getBoundingClientRect(), z = +el.style.zIndex || 0;
+    if (kx > r.left && kx < r.right && ky > r.top && ky < r.bottom && z > bz) { best = i; bz = z; }
+  });
+  return best;
+}
+function touchDoor() {
+  const i = doorUnderKey();
+  if (i !== hoverDoor) {
+    hoverDoor = i; clearTimeout(hoverTimer);
+    els.forEach((el, j) => el.classList.toggle("peek", j === i && i !== current));
+    if (i >= 0 && i !== current) hoverTimer = setTimeout(() => { els.forEach(el => el.classList.remove("peek")); go(i); hoverDoor = -1; shookAt = -1; touchDoor(); }, 500);
+  }
+  if (i !== current) return;
+  const el = els[current];
+  if (el.classList.contains("open")) return;
   if (DOORS[current].locked) { if (shookAt !== current) { shookAt = current; shake(el); } return; }
   el.classList.add("open"); updateGlow();
   if (tap) tap.opened = true;
@@ -628,7 +647,7 @@ addEventListener("pointerup", e => {
   if (!dragging) return;
   if (justPicked) { justPicked = false; return; }
   const isTap = tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 12 && performance.now() - tap.t < 600;
-  if (isTap && !tap.opened) dropKey();
+  if (isTap && !tap.opened && !e.target.closest(".arrow, .stage, .ctrl")) dropKey();   // стрелки и двери ключ не роняют
 });
 function dropKey() {
   dragging = false; keyFree = true; shookAt = -1;
