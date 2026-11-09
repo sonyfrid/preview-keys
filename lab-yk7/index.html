@@ -301,28 +301,39 @@ html.hand-cursor input{cursor:text!important}
 @keyframes holeglow{0%,100%{box-shadow:0 0 4px 1px rgba(255,214,140,.4)}50%{box-shadow:0 0 18px 7px rgba(255,214,140,1)}}
 .door.shake .leaf{animation:shake .45s}
 
-/* Вступление: лифт во весь экран */
-.lobby{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#3a2a2e,#0d0607 75%);cursor:pointer;
-  transition:transform 1s cubic-bezier(.6,0,.3,1),opacity .9s}
-.lobby-lift{position:relative;height:min(96svh,calc(96vw / .71));aspect-ratio:355/500}
-.lobby-lift .lf{position:absolute;inset:0;width:100%;height:100%}
-.lobby-lift .lop{position:absolute;left:12.68%;top:14%;width:71.83%;height:83.4%;overflow:hidden}
-.lobby-lift .lop img{position:absolute;top:0;height:100%}
-.lobby-lift .cab{left:0;width:100%}
-.lobby-lift .ll{left:0;width:51.76%;transition:transform 1.4s cubic-bezier(.5,0,.2,1)}
-.lobby-lift .lr{right:0;width:48.24%;transition:transform 1.4s cubic-bezier(.5,0,.2,1)}
-.lobby.open .ll{transform:translateX(-100%)}
-.lobby.open .lr{transform:translateX(100%)}
-.lobby.gone{transform:scale(2.6);opacity:0;pointer-events:none}
+/* Вступление: на весь экран только стальные двери лифта, они разъезжаются и открывают сайт */
+.lobby{position:fixed;inset:0;z-index:60;cursor:pointer;overflow:hidden;transition:opacity .6s .9s}
+.lv{position:absolute;top:0;bottom:0;width:50.2%;background-size:100% 100%;transition:transform 1.5s cubic-bezier(.6,0,.2,1);box-shadow:inset 0 0 60px rgba(0,0,0,.35)}
+.lv-l{left:0;background-image:url(lift_left.webp)}
+.lv-r{right:0;background-image:url(lift_right.webp)}
+.lv-seam{position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:#fff6dc;box-shadow:0 0 18px 6px rgba(255,214,140,.85);animation:lvseam 1.2s ease-in-out infinite}
+.lv-disp{position:absolute;left:50%;top:max(18px,4vh);transform:translateX(-50%);padding:6px 14px;background:#08080a;color:#ffd98a;font:600 clamp(18px,3vw,28px)/1 'Roboto',sans-serif;
+  letter-spacing:.08em;border-radius:3px;box-shadow:0 0 0 3px #9aa0a6,0 6px 18px rgba(0,0,0,.5);transition:opacity .25s}
+@keyframes lvseam{0%,100%{opacity:.35}50%{opacity:1}}
+.lobby.open .lv-l{transform:translateX(-101%)}
+.lobby.open .lv-r{transform:translateX(101%)}
+.lobby.open .lv-seam{animation:none;opacity:0}
+.lobby.open .lv-disp{opacity:0}
+.lobby.gone{opacity:0;pointer-events:none}
+
+/* Ключ держат в ладони, пока зажат палец. Брошенный ключ лежит на странице */
+.hand{--hw:72px}
+@media (hover:hover) and (pointer:fine){.hand{--hw:128px}}
+.hand img{position:relative;z-index:2}
+.hand .key{left:calc(var(--hw) * -.42);top:calc(var(--hw) * .9);width:calc(var(--hw) * .95);transform-origin:50% 50%;transform:scaleX(-1) rotate(-25deg);z-index:1}
+.hand .key svg{filter:drop-shadow(0 0 5px #ffe7b0) drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.key{touch-action:none}
+.key-layer{position:absolute;left:0;top:0;width:0;height:0;z-index:30}
+.key-layer .key{position:absolute;opacity:1;pointer-events:auto;cursor:grab}
+.key-layer .key svg{animation:kglow 1.5s ease-in-out infinite}
 </style>
 </head>
 <body>
 
 <div class="lobby" id="lobby" aria-hidden="true">
-  <div class="lobby-lift">
-    <img class="lf" src="lift_frame.webp" alt="">
-    <span class="lop"><img class="cab" src="lift_cab.webp" alt=""><img class="ll" src="lift_left.webp" alt=""><img class="lr" src="lift_right.webp" alt=""></span>
-  </div>
+  <i class="lv lv-l"></i><i class="lv lv-r"></i>
+  <span class="lv-seam"></span>
+  <span class="lv-disp">▲ 01</span>
 </div>
 
 <header class="top">
@@ -401,7 +412,7 @@ const DOORS = [
   {tag:"Дверь 07", title:"Скоро", key:"Эта дверь пока закрыта.", text:"Оставь заявку в лист ожидания, чтобы узнать первой.", locked:true},
 ];
 const $ = id => document.getElementById(id);
-let carry = false;
+let dragging = false;
 const stage = $("stage");
 let current = 0;
 
@@ -442,7 +453,7 @@ const items = DOORS.map(d => {
   add(left, "h3", "", d.title);
   add(right, "p", "key", d.key);
   add(right, "p", "text", d.text);
-  if (!d.locked) add(right, "p", "tap-hint", "Возьми ключ у Юли во рту и нажми на дверь");
+  if (!d.locked) add(right, "p", "tap-hint", "Зажми ключ у Юли во рту и перетащи его на дверь");
   box.append(left, right);
   $("infoStack").appendChild(box);
   return box;
@@ -464,16 +475,16 @@ function updateGlow() {
   els.forEach((el, i) => {
     const on = i === current && stageVisible && !el.classList.contains("open");
     el.classList.toggle("glow", on);
-    el.classList.toggle("target", on && carry && !DOORS[i].locked);
+    el.classList.toggle("target", on && dragging && !DOORS[i].locked);
   });
 }
 // Дверь открывается только ключом. Открытую можно закрыть нажатием
 function tapDoor() {
   const el = els[current];
   if (el.classList.contains("open")) { el.classList.remove("open"); updateGlow(); return; }
-  if (!carry) { shake(el); nudgeKey(); return; }
-  useKey(el);
+  shake(el); nudgeKey();
 }
+function nudgeKey() { faceEl.classList.remove("nudge"); void faceEl.offsetWidth; faceEl.classList.add("nudge"); }
 function shake(el) { el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); }
 new IntersectionObserver(es => { stageVisible = es[0].isIntersecting; updateGlow(); }, {threshold:.45}).observe(stage);
 $("prev").onclick = () => go(current - 1);
@@ -538,42 +549,76 @@ hand.innerHTML = `<img src="hand_up.webp" alt="" draggable="false">`;
 document.body.appendChild(hand);
 const fine = matchMedia("(hover:hover) and (pointer:fine)").matches;
 document.documentElement.classList.add(fine ? "hand-cursor" : "hand-touch");
+let px = innerWidth * .7, py = innerHeight * .64;
 function moveHand(x, y, smooth) {
+  px = x; py = y;
   hand.classList.toggle("glide", !!smooth);
   hand.style.transform = `translate(${x}px,${y}px)`;
 }
-moveHand(innerWidth * .7, innerHeight * .64);
-addEventListener("pointermove", e => {
-  if (e.pointerType !== "mouse") return;
-  moveHand(e.clientX, e.clientY);
-  hand.classList.toggle("off", !!e.target.closest("input"));
-}, {passive:true});
-addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") moveHand(e.clientX, e.clientY, true); }, {passive:true, capture:true});
+moveHand(px, py);
+addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" && !dragging) moveHand(e.clientX, e.clientY, true); }, {passive:true, capture:true});
 document.addEventListener("mouseleave", () => hand.classList.add("gone"));
 document.addEventListener("mouseenter", () => hand.classList.remove("gone"));
 
-// Ключ: нажал на ключ, он в руке и едет вместе с рукой, пока листаешь. Нажал на дверь: ключ в скважину, дверь открывается
-keyEl.addEventListener("click", e => {
-  e.stopPropagation();
-  if (carry || !mouthOpen) return;
-  carry = true;
-  document.documentElement.classList.add("carrying");
+// Ключ берут, только пока держат палец или кнопку. Отпустили: ключ падает и лежит там, где его бросили.
+// Как только ключ заходит на дверь, дверь открывается
+const keyLayer = document.createElement("div");
+keyLayer.className = "key-layer";
+document.body.appendChild(keyLayer);
+let keyFree = false, shookAt = -1;
+keyEl.addEventListener("pointerdown", e => {
+  if (!keyFree && !mouthOpen) return;
+  e.preventDefault(); e.stopPropagation();
+  dragging = true;
+  try { keyEl.releasePointerCapture(e.pointerId); } catch (_) {}
   const from = keyEl.getBoundingClientRect();
+  keyEl.getAnimations().forEach(a => a.cancel());
+  keyEl.style.left = keyEl.style.top = keyEl.style.width = "";
   hand.appendChild(keyEl);
+  moveHand(e.clientX, e.clientY);
   const to = keyEl.getBoundingClientRect();
-  keyEl.animate([{transform:`translate(${from.left - to.left}px,${from.top - to.top}px) rotate(0deg)`}, {transform:"rotate(-70deg)"}], {duration:450, easing:"cubic-bezier(.3,0,.2,1)"});
+  keyEl.animate([{translate:`${from.left - to.left}px ${from.top - to.top}px`}, {translate:"0 0"}], {duration:180, easing:"ease-out"});
+  document.documentElement.classList.add("carrying");
   updateGlow();
+  requestAnimationFrame(edgeScroll);
 });
-function nudgeKey() { faceEl.classList.remove("nudge"); void faceEl.offsetWidth; faceEl.classList.add("nudge"); }
-function useKey(el) {
-  const hole = el.querySelector(".hole").getBoundingClientRect();
-  moveHand(hole.left + hole.width / 2, hole.top + hole.height / 2, true);
-  hand.classList.add("turn");
-  setTimeout(() => { hand.classList.remove("turn"); el.classList.add("open"); updateGlow(); }, 650);
+addEventListener("pointermove", e => {
+  if (e.pointerType === "mouse" || dragging) moveHand(e.clientX, e.clientY);
+  if (e.pointerType === "mouse") hand.classList.toggle("off", !dragging && !!e.target.closest("input"));
+  if (dragging) touchDoor();
+}, {passive:true});
+function touchDoor() {
+  const k = keyEl.getBoundingClientRect(), kx = k.left + k.width / 2, ky = k.top + k.height / 2;
+  const el = els[current], r = el.getBoundingClientRect();
+  const inside = kx > r.left && kx < r.right && ky > r.top && ky < r.bottom;
+  if (!inside || el.classList.contains("open")) return;
+  if (DOORS[current].locked) { if (shookAt !== current) { shookAt = current; shake(el); } return; }
+  el.classList.add("open"); updateGlow();
 }
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && carry) { carry = false; document.documentElement.classList.remove("carrying"); faceEl.appendChild(keyEl); updateGlow(); }
-});
+// у края экрана страница сама едет, чтобы ключ можно было донести до двери
+function edgeScroll() {
+  if (!dragging) return;
+  const zone = Math.min(110, innerHeight * .14);
+  if (py > innerHeight - zone) scrollBy(0, Math.ceil((py - (innerHeight - zone)) / 6));
+  else if (py < zone) scrollBy(0, -Math.ceil((zone - py) / 6));
+  touchDoor();
+  requestAnimationFrame(edgeScroll);
+}
+function dropKey() {
+  if (!dragging) return;
+  dragging = false; keyFree = true; shookAt = -1;
+  document.documentElement.classList.remove("carrying");
+  const r = keyEl.getBoundingClientRect();
+  keyLayer.appendChild(keyEl);
+  keyEl.style.left = `${r.left + scrollX}px`;
+  keyEl.style.top = `${r.top + scrollY}px`;
+  keyEl.style.width = `${r.width}px`;
+  keyEl.animate([{transform:"translateY(0) rotate(-20deg)"}, {transform:"translateY(34px) rotate(8deg)", offset:.7}, {transform:"translateY(26px) rotate(4deg)", offset:.85}, {transform:"translateY(30px) rotate(6deg)"}],
+    {duration:520, easing:"cubic-bezier(.5,0,.8,.6)", fill:"forwards"});
+  updateGlow();
+}
+addEventListener("pointerup", dropKey);
+addEventListener("pointercancel", dropKey);
 
 checkMouth();
 render();
