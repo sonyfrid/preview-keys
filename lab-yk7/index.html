@@ -28,16 +28,6 @@ h1,h2,h3{font-family:var(--serif);font-weight:400;color:var(--ink);line-height:1
   background:var(--ink);color:#fff;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.25s}
 .cta:hover,.cta:focus-visible{background:#fff;color:var(--ink)}
 
-/* Вступление: бордовые створки расходятся */
-.gate{position:fixed;inset:0;z-index:50;cursor:pointer;overflow:hidden;contain:paint}
-.gate i{position:absolute;top:0;bottom:0;width:50.5%;background:linear-gradient(180deg,#4a0614,#2a030a);will-change:transform;transition:transform 2s cubic-bezier(.65,0,.2,1)}
-.gate i:first-child{left:0;border-right:1px solid var(--gold-l);box-shadow:inset -40px 0 80px rgba(0,0,0,.6)}
-.gate i:nth-of-type(2){right:0;border-left:1px solid var(--gold-l);box-shadow:inset 40px 0 80px rgba(0,0,0,.6)}
-.gate svg{position:absolute;left:50%;top:50%;width:46px;transform:translate(-50%,-50%);transition:opacity .4s}
-.gate.open{pointer-events:none}
-.gate.open svg{opacity:0}
-.gate.open i:first-child{transform:translate3d(-101%,0,0)}
-.gate.open i:nth-of-type(2){transform:translate3d(101%,0,0)}
 
 /* Шапка */
 .top{text-align:center;padding:clamp(22px,3.5vw,40px) 16px clamp(18px,3vw,30px)}
@@ -168,11 +158,6 @@ footer{padding:26px 0;border-top:1px solid var(--line);font-size:.8rem;opacity:.
 </style>
 </head>
 <body>
-
-<div class="gate" id="gate" aria-hidden="true">
-  <i></i><i></i>
-  <svg viewBox="0 0 48 120" fill="none" stroke="#f0d591" stroke-width="4"><circle cx="24" cy="24" r="18"/><path d="M24 42v70M24 92h14M24 108h10"/></svg>
-</div>
 
 <header class="top">
   <h1>Твои ключи к&nbsp;модельной славе</h1>
@@ -402,13 +387,9 @@ lift.addEventListener("click", () => {
   faceEl.classList.remove("nudge"); void faceEl.offsetWidth; faceEl.classList.add("nudge");
 });
 
-// Появление блоков и вступление
+// Появление блоков
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.15});
 document.querySelectorAll(".reveal").forEach(n => io.observe(n));
-const gate = $("gate");
-const openGate = () => { gate.classList.add("open"); setTimeout(() => gate.remove(), 2300); };
-gate.addEventListener("click", openGate);
-setTimeout(openGate, 1100);
 
 // Заявки пока никуда не уходят: форму подключим, когда будет понятно куда
 $("form").addEventListener("submit", e => {
