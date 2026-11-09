@@ -8,7 +8,7 @@
 <meta name="description" content="Проект Юлии Гнедчик о модельной индустрии: семь этажей, один ключ.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap&subset=cyrillic" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Great+Vibes&family=Roboto:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap&subset=cyrillic" rel="stylesheet">
 <style>
 :root{
   --ink:#7a0e26; --bg:#ffffff; --soft:#fbf3f0; --gold:#7a0e26; --gold-l:#eec583; --line:rgba(57,4,15,.18);
@@ -164,13 +164,45 @@ footer{padding:26px 0;border-top:1px solid var(--line);font-size:.8rem;opacity:.
   html{scroll-behavior:auto}
   .reveal{opacity:1;transform:none}
 }
+
+/* Название как на картинке Юли */
+.top h1.title-sc{font-family:'Anton SC','Anton',Impact,sans-serif;font-weight:400;color:#ef4136;letter-spacing:.01em;
+  font-size:clamp(2rem,6.4vw,4.4rem);line-height:1.08;max-width:24ch;margin:0 auto}
+@media (max-width:600px){.br-wide{display:none}}
+.intro-text{padding:clamp(40px,6vw,72px) 0;text-align:center}
+.intro-text p{max-width:680px;margin:auto;font-size:1.1rem}
+/* Рука видна сразу и на телефоне, ключ светится сильнее до нажатия */
+html.hand-touch .hand{opacity:1}
+.hand.glide{transition:transform .35s cubic-bezier(.3,0,.2,1),opacity .2s}
+.face.open .key svg{transform-origin:50% 50%;animation:kglow 1.5s ease-in-out infinite,kbob 1.5s ease-in-out infinite}
+@keyframes kbob{50%{transform:scale(1.12)}}
+.hand .key svg{animation:none;filter:drop-shadow(0 0 4px #ffe7b0)}
+/* Вступление: лифт во весь экран */
+.lobby{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#3a2a2e,#0d0607 75%);cursor:pointer;
+  transition:transform 1s cubic-bezier(.6,0,.3,1),opacity .9s}
+.lobby-lift{position:relative;height:min(96svh,calc(96vw / .71));aspect-ratio:355/500}
+.lobby-lift .lf{position:absolute;inset:0;width:100%;height:100%}
+.lobby-lift .lop{position:absolute;left:12.68%;top:14%;width:71.83%;height:83.4%;overflow:hidden}
+.lobby-lift .lop img{position:absolute;top:0;height:100%}
+.lobby-lift .cab{left:0;width:100%}
+.lobby-lift .ll{left:0;width:51.76%;transition:transform 1.4s cubic-bezier(.5,0,.2,1)}
+.lobby-lift .lr{right:0;width:48.24%;transition:transform 1.4s cubic-bezier(.5,0,.2,1)}
+.lobby.open .ll{transform:translateX(-100%)}
+.lobby.open .lr{transform:translateX(100%)}
+.lobby.gone{transform:scale(2.6);opacity:0;pointer-events:none}
 </style>
 </head>
 <body>
 
+<div class="lobby" id="lobby" aria-hidden="true">
+  <div class="lobby-lift">
+    <img class="lf" src="lift_frame.webp" alt="">
+    <span class="lop"><img class="cab" src="lift_cab.webp" alt=""><img class="ll" src="lift_left.webp" alt=""><img class="lr" src="lift_right.webp" alt=""></span>
+  </div>
+</div>
+
 <header class="top">
-  <h1>Твои ключи к&nbsp;модельной славе</h1>
-  <p>Я создала универсальный <em>Ключ</em>, который откроет Вам любую дверь модельной индустрии. <em>Мой проект «Твои ключи к модельной славе»</em> направлен на преодоление стереотипов модельного мира, защиту личных финансов и юридических прав при работе с агентствами, а также на построение карьеры независимого международного фрилансера.</p>
+  <h1 class="title-sc">MY PROJECT "Your Key to a<br class="br-wide"> Modeling Fame"</h1>
 </header>
 
 <main>
@@ -212,6 +244,10 @@ footer{padding:26px 0;border-top:1px solid var(--line);font-size:.8rem;opacity:.
       </div>
     </div>
   </div>
+</section>
+
+<section class="intro-text">
+  <div class="wrap"><p>Я создала универсальный <em>Ключ</em>, который откроет Вам любую дверь модельной индустрии. <em>Мой проект «Твои ключи к модельной славе»</em> направлен на преодоление стереотипов модельного мира, защиту личных финансов и юридических прав при работе с агентствами, а также на построение карьеры независимого международного фрилансера.</p></div>
 </section>
 
 <section class="about" id="about">
@@ -313,6 +349,7 @@ function updateHint() {
   const h = $("hint");
   let text = "", up = false;
   if (FLOORS[cur].locked) text = "Этот этаж ещё закрыт. Крути дальше или вниз";
+  else if (!keyIn && carry) text = "Ключ в руке: нажми на лифт, он вставится в замок";
   else if (!keyIn) {
     const faceGone = faceEl.getBoundingClientRect().bottom < innerHeight * .25;
     text = faceGone ? "За ключом: он у Юли во рту" : "Забери ключ изо рта и поднеси к лифту";
@@ -352,8 +389,11 @@ const hand = document.createElement("div");
 hand.className = "hand";
 hand.innerHTML = `<img src="hand_up.webp?v=2" alt="" draggable="false">`;
 document.body.appendChild(hand);
-if (matchMedia("(hover:hover) and (pointer:fine)").matches) document.documentElement.classList.add("hand-cursor");
-function moveHand(x, y) { hand.style.transform = `translate(${x}px,${y}px)`; }
+const fine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+document.documentElement.classList.add(fine ? "hand-cursor" : "hand-touch");
+function moveHand(x, y, smooth) { hand.classList.toggle("glide", !!smooth); hand.style.transform = `translate(${x}px,${y}px)`; }
+moveHand(innerWidth * .7, innerHeight * .64);
+addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") moveHand(e.clientX, e.clientY, true); }, {passive:true, capture:true});
 addEventListener("pointermove", e => {
   if (e.pointerType === "mouse" || carry) moveHand(e.clientX, e.clientY);
   if (e.pointerType === "mouse") hand.classList.toggle("off", !!e.target.closest("input"));
@@ -375,11 +415,11 @@ keyEl.addEventListener("pointerdown", e => {
 addEventListener("pointerup", e => {
   if (!carry) return;
   const moved = downAt && Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 12;
-  if (downAt && !moved) { downAt = null; sticky = true; return; }  // просто нажал: ключ остаётся в руке
+  if (downAt && !moved) { downAt = null; sticky = true; update(); return; }  // просто нажал: ключ остаётся в руке
   downAt = null;
   moveHand(e.clientX, e.clientY);
   const onLift = document.elementFromPoint(e.clientX, e.clientY)?.closest("#lift");
-  if (onLift) insertKey(); else if (!(sticky && e.target.closest(".arrow"))) putKey(faceEl);
+  if (onLift) insertKey(); else if (!sticky) putKey(faceEl);
 }, true);
 addEventListener("pointercancel", () => { if (carry && !sticky) putKey(faceEl); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && carry) putKey(faceEl); });
@@ -398,10 +438,18 @@ function insertKey() {
   update();
 }
 lift.addEventListener("click", () => {
+  if (carry && !keyIn) { insertKey(); return; }
   if (keyIn || carry) return;
   lift.classList.remove("shake"); void lift.offsetWidth; lift.classList.add("shake");
   faceEl.classList.remove("nudge"); void faceEl.offsetWidth; faceEl.classList.add("nudge");
 });
+
+// Вступление: лифт во весь экран открывается сам, ключ не нужен
+const lobby = $("lobby");
+let lobbyDone = false;
+const openLobby = () => { if (lobbyDone) return; lobbyDone = true; lobby.classList.add("open"); setTimeout(() => lobby.classList.add("gone"), 1700); setTimeout(() => lobby.remove(), 2700); };
+lobby.addEventListener("click", openLobby);
+setTimeout(openLobby, 900);
 
 // Появление блоков
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.15});
