@@ -320,7 +320,7 @@ html.hand-cursor input{cursor:text!important}
 .hand{--hw:72px}
 @media (hover:hover) and (pointer:fine){.hand{--hw:128px}}
 .hand img{position:relative;z-index:2}
-.hand .key{left:calc(var(--hw) * -.42);top:calc(var(--hw) * .9);width:calc(var(--hw) * .95);transform-origin:50% 50%;transform:scaleX(-1) rotate(-25deg);z-index:1}
+.hand .key{left:calc(var(--hw) * -.42);top:calc(var(--hw) * .61);width:calc(var(--hw) * .8);transform-origin:50% 50%;transform:scaleX(-1) rotate(-15deg);z-index:1}
 .hand .key svg{filter:drop-shadow(0 0 5px #ffe7b0) drop-shadow(0 2px 3px rgba(0,0,0,.5))}
 .key{touch-action:none}
 .key-layer{position:absolute;left:0;top:0;width:0;height:0;z-index:30}
@@ -344,6 +344,11 @@ footer{border-top-color:rgba(122,14,38,.2)}
 .door{color:#fff}
 .frame{box-shadow:0 22px 40px rgba(57,4,15,.28)}
 .hand img{filter:drop-shadow(0 10px 14px rgba(57,4,15,.3))}
+
+/* Safari рисовал повёрнутые в 3D двери поверх руки и ключа: двери в своём плоском слое, рука в своём */
+.stage-grid{transform:translateZ(0);isolation:isolate}
+.hand{transform-style:flat;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.key-layer{transform:translateZ(0)}
 </style>
 </head>
 <body>
@@ -471,7 +476,7 @@ const items = DOORS.map(d => {
   add(left, "h3", "", d.title);
   add(right, "p", "key", d.key);
   add(right, "p", "text", d.text);
-  if (!d.locked) add(right, "p", "tap-hint", "Зажми ключ у Юли во рту и перетащи его на дверь");
+  if (!d.locked) add(right, "p", "tap-hint", "Нажми на ключ у Юли во рту и наведи его на дверь");
   box.append(left, right);
   $("infoStack").appendChild(box);
   return box;
@@ -498,6 +503,7 @@ function updateGlow() {
 }
 // Дверь открывается только ключом. Открытую можно закрыть нажатием
 function tapDoor() {
+  if (dragging) return;   // с ключом в руке дверь открывается наведением
   const el = els[current];
   if (el.classList.contains("open")) { el.classList.remove("open"); updateGlow(); return; }
   shake(el); nudgeKey();
@@ -553,8 +559,8 @@ const faceEl = $("face"), keyEl = $("key");
 let mouthOpen = false;
 function checkMouth() {
   const r = faceEl.getBoundingClientRect(), y = r.top + r.height * .6, h = innerHeight;
-  if (!mouthOpen && y < h * .55) mouthOpen = true;
-  else if (mouthOpen && y > h * .63) mouthOpen = false;
+  if (!mouthOpen && y < h * .4 && scrollY > h * .12) mouthOpen = true;
+  else if (mouthOpen && (y > h * .48 || scrollY < h * .06)) mouthOpen = false;
   faceEl.classList.toggle("open", mouthOpen);
 }
 addEventListener("scroll", checkMouth, {passive:true});
@@ -571,40 +577,44 @@ let px = innerWidth * .7, py = innerHeight * .64;
 function moveHand(x, y, smooth) {
   px = x; py = y;
   hand.classList.toggle("glide", !!smooth);
-  hand.style.transform = `translate(${x}px,${y}px)`;
+  hand.style.transform = `translate3d(${x}px,${y}px,0)`;
 }
 moveHand(px, py);
-addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" && !dragging) moveHand(e.clientX, e.clientY, true); }, {passive:true, capture:true});
+addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") moveHand(e.clientX, e.clientY, !dragging); }, {passive:true, capture:true});
 document.addEventListener("mouseleave", () => hand.classList.add("gone"));
 document.addEventListener("mouseenter", () => hand.classList.remove("gone"));
 
-// Ключ берут, только пока держат палец или кнопку. Отпустили: ключ падает и лежит там, где его бросили.
-// Как только ключ заходит на дверь, дверь открывается
+// Ключ: тык по ключу — прилип к руке и ходит за ней (и пока листаешь). Тык ещё раз — отлип и упал там, где отпустили.
+// Навёл ключ на дверь — дверь открывается
 const keyLayer = document.createElement("div");
 keyLayer.className = "key-layer";
 document.body.appendChild(keyLayer);
-let keyFree = false, shookAt = -1;
-keyEl.addEventListener("pointerdown", e => {
-  if (!keyFree && !mouthOpen) return;
-  e.preventDefault(); e.stopPropagation();
-  dragging = true;
-  try { keyEl.releasePointerCapture(e.pointerId); } catch (_) {}
+let keyFree = false, shookAt = -1, justPicked = false, tap = null;
+function pickKey(e) {
+  dragging = true; justPicked = true;
   const from = keyEl.getBoundingClientRect();
   keyEl.getAnimations().forEach(a => a.cancel());
   keyEl.style.left = keyEl.style.top = keyEl.style.width = "";
   hand.appendChild(keyEl);
   moveHand(e.clientX, e.clientY);
   const to = keyEl.getBoundingClientRect();
-  keyEl.animate([{translate:`${from.left - to.left}px ${from.top - to.top}px`}, {translate:"0 0"}], {duration:180, easing:"ease-out"});
+  keyEl.animate([{translate:`${from.left - to.left}px ${from.top - to.top}px`}, {translate:"0 0"}], {duration:220, easing:"ease-out"});
   document.documentElement.classList.add("carrying");
   updateGlow();
-  requestAnimationFrame(edgeScroll);
+}
+keyEl.addEventListener("pointerdown", e => {
+  if (dragging || (!keyFree && !mouthOpen)) return;
+  e.preventDefault(); e.stopPropagation();
+  try { keyEl.releasePointerCapture(e.pointerId); } catch (_) {}
+  pickKey(e);
 });
+addEventListener("pointerdown", e => { tap = {x:e.clientX, y:e.clientY, t:performance.now(), opened:false}; if (dragging) touchDoor(); }, true);
 addEventListener("pointermove", e => {
   if (e.pointerType === "mouse" || dragging) moveHand(e.clientX, e.clientY);
   if (e.pointerType === "mouse") hand.classList.toggle("off", !dragging && !!e.target.closest("input"));
   if (dragging) touchDoor();
 }, {passive:true});
+addEventListener("scroll", () => { if (dragging) touchDoor(); }, {passive:true});
 function touchDoor() {
   const k = keyEl.getBoundingClientRect(), kx = k.left + k.width / 2, ky = k.top + k.height / 2;
   const el = els[current], r = el.getBoundingClientRect();
@@ -612,18 +622,15 @@ function touchDoor() {
   if (!inside || el.classList.contains("open")) return;
   if (DOORS[current].locked) { if (shookAt !== current) { shookAt = current; shake(el); } return; }
   el.classList.add("open"); updateGlow();
+  if (tap) tap.opened = true;
 }
-// у края экрана страница сама едет, чтобы ключ можно было донести до двери
-function edgeScroll() {
+addEventListener("pointerup", e => {
   if (!dragging) return;
-  const zone = Math.min(110, innerHeight * .14);
-  if (py > innerHeight - zone) scrollBy(0, Math.ceil((py - (innerHeight - zone)) / 6));
-  else if (py < zone) scrollBy(0, -Math.ceil((zone - py) / 6));
-  touchDoor();
-  requestAnimationFrame(edgeScroll);
-}
+  if (justPicked) { justPicked = false; return; }
+  const isTap = tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 12 && performance.now() - tap.t < 600;
+  if (isTap && !tap.opened) dropKey();
+});
 function dropKey() {
-  if (!dragging) return;
   dragging = false; keyFree = true; shookAt = -1;
   document.documentElement.classList.remove("carrying");
   const r = keyEl.getBoundingClientRect();
@@ -631,12 +638,10 @@ function dropKey() {
   keyEl.style.left = `${r.left + scrollX}px`;
   keyEl.style.top = `${r.top + scrollY}px`;
   keyEl.style.width = `${r.width}px`;
-  keyEl.animate([{transform:"translateY(0) rotate(-20deg)"}, {transform:"translateY(34px) rotate(8deg)", offset:.7}, {transform:"translateY(26px) rotate(4deg)", offset:.85}, {transform:"translateY(30px) rotate(6deg)"}],
+  keyEl.animate([{transform:"translateY(0) rotate(-15deg)"}, {transform:"translateY(34px) rotate(8deg)", offset:.7}, {transform:"translateY(26px) rotate(4deg)", offset:.85}, {transform:"translateY(30px) rotate(6deg)"}],
     {duration:520, easing:"cubic-bezier(.5,0,.8,.6)", fill:"forwards"});
   updateGlow();
 }
-addEventListener("pointerup", dropKey);
-addEventListener("pointercancel", dropKey);
 
 checkMouth();
 render();
