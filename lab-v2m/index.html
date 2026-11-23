@@ -25,8 +25,8 @@ section{position:relative;width:100%}
 /* ---------- 1. hero ---------- */
 #hero{height:230svh}
 #hero .sticky{background:var(--beige)}
-.face{position:absolute;left:2%;width:96%;top:5%}
-.headline{position:absolute;left:0;right:0;top:calc(5% + var(--col) * 1.05);text-align:center;
+.face{position:absolute;left:2%;width:96%;top:12%}
+.headline{position:absolute;left:0;right:0;top:calc(12% + var(--col) * 1.05);text-align:center;
   font-family:'Rubik Spray Paint',sans-serif;font-size:calc(var(--col) * .086);line-height:1.08;letter-spacing:-.01em;padding:0 2%;white-space:nowrap}
 .headline .ch{display:inline-block;background:linear-gradient(180deg,#7d0815 0%,#b3121f 55%,#d01c2c 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent}
@@ -47,16 +47,18 @@ section{position:relative;width:100%}
   82%,100%{filter:brightness(1);opacity:1}
 }
 @keyframes sweep{0%{background-position:120% 0;opacity:1}90%{opacity:1}100%{background-position:-20% 0;opacity:0}}
-#curtains{position:absolute;left:0;top:0;width:100%;height:calc(5% + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
+#curtains{position:absolute;left:0;top:0;width:100%;height:calc(12% + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
 
 /* ---------- 2. keyhole ---------- */
 #keyhole{height:330svh;background:#000}
 #keyhole .sticky{background:#000}
 .kh-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#khSvg{position:absolute;inset:0;width:100%;height:100%}
-.kh-text{font-family:'Pangolin',sans-serif;fill:#efdcc0}
-.sign{font-family:'Great Vibes',cursive;fill:#efdcc0}
-.key{position:absolute;width:calc(var(--col)*.16);pointer-events:none;transform-origin:30% 12%;will-change:transform}
+.kh-wrap{position:absolute;left:0;top:0;width:calc(var(--col)*1.19);aspect-ratio:736/920;transform-origin:0 0;will-change:transform}
+.kh-frame{position:absolute;inset:0;width:100%;height:100%;box-shadow:0 0 0 300vmax #000}
+.kh-brush,.kh-letters{position:absolute;inset:0;width:100%;height:100%}
+.kh-brush path{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;opacity:.92}
+.kh-brush path.b2{stroke-width:1.2;opacity:.45}
+.key{position:absolute;width:calc(var(--col)*.12);pointer-events:none;transform-origin:30% 12%;will-change:transform}
 
 /* ---------- 3. doors ---------- */
 #doors{height:100svh;min-height:calc(var(--col)*1.6);background:var(--beige);overflow:hidden;touch-action:pan-y}
@@ -70,9 +72,7 @@ section{position:relative;width:100%}
 .door .hint{position:absolute;left:0;right:0;top:3%;text-align:center;font-family:'Bad Script',cursive;color:#fff;font-size:calc(var(--col)*.058);line-height:1.05;pointer-events:none}
 .door .hint b{font-weight:400;display:inline-block;margin:0 .3em}
 .door .khole{position:absolute;left:50%;top:58%;width:6%;height:auto;transform:translate(-50%,-50%);pointer-events:none}
-.fallen-key{position:absolute;right:3%;top:1%;width:calc(var(--col)*.11);transform:translateY(-120svh) rotate(-35deg);z-index:30;pointer-events:none}
-.fallen-key.in{animation:keydrop 1.1s cubic-bezier(.3,0,.6,1) forwards}
-@keyframes keydrop{0%{transform:translateY(-120svh) rotate(-80deg)}70%{transform:translateY(0) rotate(-28deg)}82%{transform:translateY(-14px) rotate(-38deg)}100%{transform:translateY(0) rotate(-35deg)}}
+.fallen-key{position:absolute;left:22%;top:4%;width:22%;transform-origin:50% 20%;z-index:5;pointer-events:none;filter:drop-shadow(2px 4px 3px rgba(0,0,0,.45))}
 
 .door-view{position:fixed;inset:0;z-index:100;display:none}
 .door-view.on{display:block}
@@ -94,10 +94,9 @@ section{position:relative;width:100%}
 .about-p{width:100%;margin-top:-6%;position:relative;z-index:1}
 
 /* ---------- 5. japan ---------- */
-#japan{height:calc(var(--col)*16/9);background:url(assets/flag.webp) center/cover no-repeat;overflow:hidden}
-.strip{position:absolute;left:0;right:0;top:27%;height:46%;overflow:hidden}
-.track{display:flex;height:100%;width:max-content;animation:run 40s linear infinite}
-.track img{height:100%;width:auto}
+#japan{height:calc(var(--col)*1.15);overflow:hidden;background:var(--beige)}
+.pline{position:absolute;inset:0}
+.pline img{position:absolute;top:50%;object-fit:cover;will-change:transform,width,height}
 @keyframes run{to{transform:translateX(-50%)}}
 
 /* ---------- 6/9. video ---------- */
@@ -106,9 +105,9 @@ section{position:relative;width:100%}
 .vbox video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* ---------- 7. logos ---------- */
-#logos{padding:12% 0;display:flex;flex-direction:column;gap:5%;justify-content:center;min-height:calc(var(--col)*16/9)}
+#logos{padding:12% 0;display:flex;flex-direction:column;gap:22px;justify-content:center;min-height:calc(var(--col)*16/9)}
 .lrow{overflow:hidden;width:100%}
-.lrow .ltrack{display:flex;gap:10px;width:max-content;animation:run 45s linear infinite}
+.lrow .ltrack{display:flex;gap:26px;width:max-content;animation:run 45s linear infinite}
 .lrow.rev .ltrack{animation-direction:reverse}
 .ltrack img{width:calc(var(--col)*.34);aspect-ratio:4/3;object-fit:cover;filter:grayscale(1) contrast(1.1);border:1px solid rgba(76,10,18,.25)}
 
@@ -156,14 +155,17 @@ section{position:relative;width:100%}
 <section id="keyhole">
   <div class="sticky" id="khStage">
     <img class="kh-photo" src="assets/keyhole_photo.webp" alt="">
-    <svg id="khSvg" preserveAspectRatio="none"></svg>
+    <div class="kh-wrap" id="khWrap">
+      <img class="kh-frame" src="assets/kh_frame.webp" alt="">
+      <svg class="kh-brush" viewBox="0 0 736 920"><path d="M256.3 122.5C228.6 131.7 219.9 138.7 213.3 145.4C206.6 152.1 199.9 160.5 196.0 168.0C192.2 175.6 191.0 183.2 190.2 190.7C189.4 198.1 190.0 205.1 191.1 213.0C192.2 220.8 193.8 230.2 196.8 237.9C199.8 245.7 204.3 251.8 209.2 259.4C214.0 267.0 220.6 276.2 225.9 283.6C231.2 291.1 235.4 297.3 240.8 304.1C246.1 311.0 252.6 317.6 258.0 324.7C263.3 331.7 268.2 339.3 272.9 346.4C277.6 353.5 283.5 359.9 286.1 367.2C288.7 374.6 289.1 383.1 288.8 390.7C288.5 398.3 285.9 405.3 284.2 412.8C282.5 420.3 280.5 428.1 278.5 435.9C276.5 443.7 274.6 451.4 272.2 459.6C269.8 467.8 266.1 476.5 264.2 485.0C262.2 493.6 262.0 502.3 260.4 510.8C258.7 519.4 255.6 528.1 254.1 536.3C252.5 544.5 251.9 552.0 250.9 560.1C249.9 568.2 249.2 576.9 248.2 584.8C247.1 592.8 245.7 600.0 244.8 607.7C243.9 615.4 243.4 623.6 242.6 631.1C241.8 638.5 240.8 644.9 240.0 652.2C239.2 659.4 239.2 666.6 238.0 674.4C236.7 682.3 234.0 691.1 232.3 699.0C230.6 707.0 229.5 714.1 227.8 721.9C226.1 729.8 223.6 738.2 222.2 746.2C220.9 754.1 219.2 763.4 219.7 769.8C220.1 776.2 220.1 782.1 224.8 784.7C229.5 787.3 240.0 785.4 247.7 785.4C255.5 785.3 263.2 784.4 271.2 784.2C279.3 783.9 287.9 784.3 295.9 783.7C303.9 783.1 311.4 781.7 319.1 780.8C326.7 779.9 333.9 779.1 341.8 778.5C349.6 777.8 358.3 777.7 366.1 776.9C374.0 776.1 381.6 774.1 388.7 773.6C395.8 773.1 402.3 773.8 409.0 773.7C415.7 773.7 422.0 773.4 428.8 773.4C435.6 773.3 442.8 772.9 449.7 773.4C456.6 773.9 463.2 775.8 470.2 776.3C477.2 776.8 486.8 778.2 491.7 776.5C496.6 774.8 499.0 771.8 499.6 766.2C500.1 760.6 496.0 750.4 494.9 742.9C493.8 735.3 493.5 728.6 492.8 721.1C492.1 713.6 491.5 705.8 490.6 697.9C489.7 690.0 488.5 681.3 487.5 673.7C486.5 666.0 485.4 659.5 484.6 651.8C483.8 644.2 483.8 635.3 482.5 627.6C481.2 620.0 478.3 613.0 476.6 606.0C475.0 598.9 473.6 592.3 472.5 585.2C471.4 578.1 471.4 570.6 470.1 563.5C468.9 556.5 466.1 549.7 464.9 542.6C463.6 535.6 463.0 528.5 462.4 521.2C461.8 513.9 461.9 506.5 461.1 498.8C460.4 491.2 458.5 483.3 457.9 475.1C457.3 466.8 457.7 457.4 457.3 449.2C457.0 441.1 456.3 434.0 455.7 425.9C455.2 417.8 453.9 409.2 454.0 400.7C454.0 392.2 452.6 383.0 456.2 374.7C459.9 366.4 469.3 358.9 476.0 350.8C482.7 342.6 490.5 333.6 496.5 325.6C502.5 317.6 507.5 310.3 511.9 302.7C516.3 295.1 520.2 287.3 523.1 279.8C526.0 272.2 527.3 264.9 529.4 257.5C531.4 250.1 533.6 242.6 535.2 235.3C536.9 228.0 538.4 221.3 539.3 213.5C540.2 205.6 542.2 196.3 540.7 188.2C539.1 180.1 534.7 172.3 530.1 164.9C525.4 157.4 519.2 149.0 512.7 143.5C506.1 138.0 498.6 134.6 490.9 132.0C483.2 129.4 474.8 127.9 466.7 127.8C458.5 127.8 450.0 128.8 442.0 131.8C433.9 134.8 426.2 140.8 418.5 145.8C410.8 150.8 403.7 155.7 395.6 161.8C387.6 167.8 377.9 178.8 370.1 182.1C362.2 185.4 354.8 185.1 348.3 181.4C341.8 177.7 337.6 165.7 331.2 159.8C324.8 153.8 316.7 150.1 309.8 145.8C302.9 141.5 296.9 137.4 289.9 134.0C282.9 130.6 273.6 127.0 267.9 125.3C262.3 123.7 261.4 123.3 255.9 124.0C250.5 124.7 242.7 126.1 235.5 129.6C228.3 133.1 219.0 138.5 212.8 145.1C206.5 151.7 201.3 161.4 197.9 169.2C194.4 176.9 193.0 184.0 192.2 191.5C191.4 199.1 192.2 206.9 192.9 214.5"/><path class="b2" d="M255.6 117.8C222.4 129.5 213.6 136.9 207.3 143.4C201.0 149.8 196.1 157.0 192.9 164.2C189.7 171.3 188.6 179.4 188.1 186.3C187.7 193.2 189.3 198.9 190.3 205.6C191.3 212.2 191.4 219.3 194.2 226.4C197.0 233.5 202.3 240.6 207.0 248.4C211.6 256.3 217.4 265.3 222.1 273.4C226.8 281.5 230.8 288.7 235.2 297.0C239.5 305.4 244.1 314.8 248.2 323.5C252.3 332.2 255.2 340.7 259.8 349.4C264.4 358.2 272.6 367.4 275.8 376.0C278.9 384.6 278.6 392.5 278.6 401.0C278.7 409.4 276.6 418.2 275.8 426.4C275.0 434.6 274.0 442.6 273.8 450.1C273.6 457.7 274.9 464.3 274.5 471.9C274.1 479.4 271.9 488.1 271.3 495.3C270.6 502.6 271.5 508.4 270.6 515.5C269.7 522.6 266.8 530.0 265.8 537.8C264.7 545.6 265.7 554.3 264.3 562.3C262.8 570.3 258.8 578.0 257.2 585.8C255.6 593.7 256.2 601.4 254.5 609.3C252.9 617.1 249.5 625.2 247.3 632.8C245.1 640.4 242.7 647.2 241.5 654.8C240.2 662.5 241.0 671.1 239.8 678.7C238.7 686.4 236.0 693.7 234.6 700.7C233.2 707.7 232.6 714.5 231.6 720.9C230.5 727.3 229.8 732.7 228.5 739.1C227.1 745.5 223.6 753.6 223.4 759.1C223.3 764.6 223.5 770.3 227.8 772.1C232.0 773.9 242.2 770.3 249.0 770.1C255.9 769.9 262.3 770.8 269.0 771.0C275.6 771.1 282.4 770.4 289.2 770.8C295.9 771.3 302.7 772.9 309.4 773.8C316.1 774.7 322.4 775.6 329.3 776.2C336.2 776.8 343.4 777.2 350.8 777.5C358.2 777.8 365.8 777.7 373.5 778.0C381.2 778.4 389.2 778.9 397.1 779.4C405.0 779.9 412.6 781.0 420.8 781.2C429.0 781.3 437.6 780.4 446.3 780.2C454.9 780.0 464.3 780.2 472.5 780.2C480.8 780.2 490.6 782.2 496.0 780.3C501.5 778.4 504.5 774.4 505.3 768.8C506.0 763.2 501.7 754.1 500.2 746.9C498.8 739.6 497.5 732.3 496.3 725.3C495.2 718.4 494.4 711.9 493.4 705.1C492.4 698.3 491.2 691.8 490.3 684.6C489.4 677.3 489.1 669.4 488.3 661.7C487.5 654.1 486.2 646.4 485.5 638.5C484.7 630.7 484.2 622.8 483.7 614.4C483.1 606.0 482.5 596.9 482.0 588.3C481.6 579.8 481.7 571.6 481.1 563.0C480.6 554.4 479.7 545.5 478.7 536.6C477.7 527.7 476.7 517.8 475.0 509.4C473.3 501.0 470.6 494.4 468.5 486.3C466.5 478.2 464.9 468.7 462.6 460.7C460.3 452.8 457.3 446.2 454.7 438.7C452.2 431.3 449.6 423.4 447.5 416.1C445.4 408.9 442.3 402.3 441.9 395.1C441.5 388.0 441.4 380.9 445.0 373.3C448.7 365.8 456.8 358.0 463.9 350.0C470.9 341.9 480.4 332.9 487.3 325.1C494.3 317.3 500.5 310.8 505.6 303.2C510.6 295.6 514.0 287.4 517.7 279.4C521.3 271.4 524.4 262.7 527.4 255.0C530.3 247.3 533.8 240.8 535.5 233.5C537.2 226.2 537.3 218.3 537.6 211.2C537.9 204.0 539.3 197.3 537.3 190.6C535.3 183.9 530.4 177.0 525.6 170.8C520.8 164.5 515.1 157.7 508.5 153.3C501.9 148.8 493.3 145.8 485.7 144.0C478.2 142.1 470.1 141.8 463.2 142.3C456.4 142.8 451.1 144.2 444.5 147.1C437.8 149.9 429.9 155.2 423.4 159.2C416.9 163.3 412.1 167.3 405.5 171.3C398.9 175.3 390.8 181.6 383.6 183.2C376.3 184.9 368.5 185.9 362.1 181.2C355.7 176.5 351.8 162.0 345.0 154.9C338.3 147.8 329.4 143.6 321.6 138.8C313.7 134.0 306.2 129.0 297.8 126.0C289.4 123.0 278.0 121.8 271.1 120.7C264.2 119.6 262.9 118.8 256.2 119.4C249.4 120.1 238.6 120.8 230.6 124.7C222.6 128.6 215.0 135.9 208.3 142.7"/></svg>
+      <img class="kh-letters" id="khLetters" src="assets/kh_letters.webp" alt="открой все двери в мире моды">
+    </div>
     <svg class="key" id="khKey" viewBox="0 0 60 160"><use href="#keyShape"/></svg>
   </div>
 </section>
 
 <!-- 3. Doors -->
 <section id="doors">
-  <svg class="fallen-key" id="fallenKey" viewBox="0 0 60 160"><use href="#keyShape"/></svg>
   <div class="collage" id="collage"></div>
 </section>
 
@@ -176,7 +178,7 @@ section{position:relative;width:100%}
 
 <!-- 5. Japan -->
 <section id="japan">
-  <div class="strip"><div class="track" id="jpTrack"></div></div>
+  <div class="pline" id="pline"></div>
 </section>
 
 <!-- 6. Showreel -->
@@ -298,9 +300,11 @@ const ctx = cv.getContext('2d');
 const hero = document.getElementById('hero');
 let curL, curR, curtainBox = null;
 let heroP = 0, heroPs = 0, sway = 0, swayV = 0, lastHeroP = 0;
-Promise.all([loadImg('assets/curtain_l.webp'), loadImg('assets/curtain_r.webp')]).then(([l, r]) => {
+const OLD = /[?&]c=old/.test(location.search);
+const CUR = OLD ? { f: 'curtain', lIn: 471, lMin: 340, rIn: 544, rMax: 642 } : { f: 'curtain2', lIn: 369, lMin: 261, rIn: 403, rMax: 469 };
+Promise.all([loadImg(`assets/${CUR.f}_l.webp`), loadImg(`assets/${CUR.f}_r.webp`)]).then(([l, r]) => {
   curL = l; curR = r;
-  curtainBox = { lIn: 472, rIn: 544, w: l.width, h: l.height }; // measured in tools
+  curtainBox = { lIn: CUR.lIn, rIn: CUR.rIn, lMin: CUR.lMin, rMax: CUR.rMax, w: l.width, h: l.height }; // measured in tools
   resizeCanvas(); tick();
 });
 function resizeCanvas() {
@@ -320,7 +324,9 @@ function drawCurtains(t) {
   const drawSide = (img, left) => {
     const inner = left ? curtainBox.lIn : curtainBox.rIn;
     const span = left ? inner : curtainBox.w - inner;
-    const xIn = left ? lerp(W * .5 + W * .03, W * .07, e) : lerp(W * .5 - W * .03, W * .93, e);
+    const notch = (left ? curtainBox.lIn - curtainBox.lMin : curtainBox.rMax - curtainBox.rIn) * sy;
+    const closed = left ? W * .5 + notch + W * .07 : W * .5 - notch - W * .07;
+    const xIn = left ? lerp(closed, W * .07, e) : lerp(closed, W * .93, e);
     const sw = span / strips;
     const sxk = Math.max(sy * comp, ((left ? xIn : W - xIn) + W * .04) / span); // always reach the screen edge
     for (let i = 0; i < strips; i++) {
@@ -342,51 +348,26 @@ function drawCurtains(t) {
 /* ================= 2. keyhole ================= */
 const khSec = document.getElementById('keyhole');
 const khStage = document.getElementById('khStage');
-const svg = document.getElementById('khSvg');
 const keyEl = document.getElementById('khKey');
-function buildKeyholeSvg() {
-  const W = khStage.clientWidth, H = khStage.clientHeight;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.innerHTML = `
-  <defs>
-    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3dca6"/><stop offset=".5" stop-color="#c49a52"/><stop offset="1" stop-color="#7a5524"/></linearGradient>
-    <mask id="hole"><rect width="${W}" height="${H}" fill="#fff"/><path id="khMaskPath" d="${KH}" fill="#000"/></mask>
-    <path id="arcL" d="M ${W*.17} ${H*.78} C ${W*.02} ${H*.55}, ${W*.05} ${H*.25}, ${W*.32} ${H*.13}"/>
-    <path id="arcR" d="M ${W*.36} ${H*.11} C ${W*.55} ${H*.05}, ${W*.78} ${H*.07}, ${W*.95} ${H*.17}"/>
-  </defs>
-  <rect width="${W}" height="${H}" fill="#000" mask="url(#hole)"/>
-  <path id="khRim" d="${KH}" fill="none" stroke="url(#rim)" vector-effect="non-scaling-stroke" stroke-width="6"/>
-  <g id="khTexts">
-    <text class="kh-text" font-size="${W*.085}"><textPath href="#arcL">открой все двери</textPath></text>
-    <text class="kh-text" font-size="${W*.085}"><textPath href="#arcR">♥ в мире моды</textPath></text>
-    <text class="sign" font-size="${W*.13}" x="${W*.54}" y="${H*.93}" text-anchor="middle" transform="rotate(-8 ${W*.54} ${H*.93})">Yulia Gnedchik</text>
-  </g>`;
-}
+const khWrap = document.getElementById('khWrap'), khLetters = document.getElementById('khLetters');
 function drawKeyhole(p) {
   const W = khStage.clientWidth, H = khStage.clientHeight;
-  // base keyhole size
-  const bw = W * .62, scale0 = bw / KH_W;
-  const cx = W * .5, cy = H * .5;
-  // grow: pivot at point (50,105) of the keyhole (lower part, so the heart notch leaves the top)
-  const grow = lerp(1, 12, Math.pow(clamp(p / .8), 2.2));
-  const s = scale0 * grow;
-  const px = 50, py = 105;
-  const tx = cx - px * s, ty = cy + (105 - 75) * scale0 - py * s;
-  const tr = `translate(${tx} ${ty}) scale(${s})`;
-  const mp = document.getElementById('khMaskPath'), rim = document.getElementById('khRim');
-  if (!mp) return;
-  mp.setAttribute('transform', tr); rim.setAttribute('transform', tr);
-  rim.style.opacity = clamp(1 - (grow - 1) / 4);
-  document.getElementById('khTexts').style.opacity = clamp(1 - p * 3.5);
-  // key: small in "hand" position at right side of the keyhole, grows, then falls
-  const kp = clamp((p - .2) / .8);
-  const kw = W * .16;
-  const ks = lerp(.55, 2.1, ease(clamp(kp / .7)));
-  const fall = Math.pow(clamp((kp - .45) / .55), 2);
-  const kx = cx + bw * .28, ky = cy - bw * .05;
+  const ww = khWrap.offsetWidth, k0 = ww / 736;
+  const grow = lerp(1, 7.5, Math.pow(clamp(p / .85), 2.6));
+  const k = k0 * grow;
+  const cx = W * .5, cy = H * .52;
+  const px = 367, py = 620;
+  const tx = cx - px * k, ty = cy + (py - 455) * k0 - py * k;
+  khWrap.style.transform = `translate(${tx}px, ${ty}px) scale(${grow})`;
+  khLetters.style.opacity = clamp(1 - p * 3.5);
+  const kp = clamp((p - .15) / .85);
+  const kw = W * .12;
+  const ks = lerp(.6, 1.25, ease(clamp(kp / .7)));
+  const fall = Math.pow(clamp((kp - .5) / .5), 2);
+  const kx = cx + 120 * k0, ky = cy - 40 * k0;
   keyEl.style.left = (kx - kw * .3) + 'px';
-  keyEl.style.top = (ky) + 'px';
-  keyEl.style.transform = `translateY(${fall * H * 1.3}px) rotate(${lerp(-18, 40, ease(clamp(kp))) + fall * 60}deg) scale(${ks})`;
+  keyEl.style.top = ky + 'px';
+  keyEl.style.transform = `translateY(${fall * H * 1.2}px) rotate(${lerp(-18, 30, ease(kp)) + fall * 50}deg) scale(${ks})`;
 }
 
 /* ================= 3. doors ================= */
@@ -408,6 +389,7 @@ doorsData.forEach((d, i) => {
   el.className = 'door';
   el.innerHTML = `<img src="${d.src}" alt="Дверь 0${d.n}"><img class="khole" src="${keyholeImg}" alt="">
     <div class="hint">двери можно<br><b>←</b>перелистывать<b>→</b></div><div class="lbl">Дверь 0${d.n}</div>`;
+  if (d.n === 2) el.insertAdjacentHTML('beforeend', '<svg class="fallen-key" id="fallenKey" viewBox="0 0 60 160"><use href="#keyShape"/></svg>');
   d.el = el; collage.appendChild(el);
 });
 function layoutDoors() {
@@ -438,10 +420,14 @@ layoutDoors();
   });
   collage.addEventListener('pointercancel', () => down = false);
 }
-// key drops onto the doors when the section shows up
-const fk = document.getElementById('fallenKey');
-new IntersectionObserver((es, ob) => { es.forEach(en => { if (en.isIntersecting) { fk.classList.add('in'); ob.disconnect(); } }); }, { threshold: .35 }).observe(document.getElementById('doors'));
-
+const fk = document.getElementById('fallenKey'), doorsSec = document.getElementById('doors');
+const bounce = t => { const n = 7.5625, d = 2.75; if (t < 1 / d) return n * t * t; if (t < 2 / d) return n * (t -= 1.5 / d) * t + .75; if (t < 2.5 / d) return n * (t -= 2.25 / d) * t + .9375; return n * (t -= 2.625 / d) * t + .984375; };
+function drawFallenKey() {
+  const r = doorsSec.getBoundingClientRect();
+  const kp = clamp((innerHeight - r.top) / (innerHeight * .95));
+  const y = (1 - bounce(kp)) * -innerHeight * .9;
+  fk.style.transform = `translateY(${y}px) rotate(${lerp(-80, -35, kp)}deg)`;
+}
 /* door view (zoom door, then keyhole grows into the info screen) */
 const dv = document.getElementById('dv'), dvDoor = document.getElementById('dvDoor'), dvInfo = document.getElementById('dvInfo');
 const maskURI = khURI(khSvg(false));
@@ -475,7 +461,7 @@ async function openDoor(d) {
   const W = innerWidth, H = innerHeight, full = { x: 0, y: 0, w: W, h: H };
   await tween(650, t => setRect(dvDoor, { x: lerp(openRect.x, 0, t), y: lerp(openRect.y, 0, t), w: lerp(openRect.w, W, t), h: lerp(openRect.h, H, t) }));
   const start = W * .055;
-  await tween(900, t => setMask(lerp(start, Math.max(W, H) * 9, t * t)));
+  await tween(2200, t => setMask(lerp(start, Math.max(W, H) * 9, t * t * t)));
   dv.classList.add('ready'); anim = false;
 }
 async function closeDoor(instant) {
@@ -484,7 +470,7 @@ async function closeDoor(instant) {
   const W = innerWidth, H = innerHeight;
   if (!instant) {
     const start = W * .055;
-    await tween(700, t => setMask(lerp(Math.max(W, H) * 9, start, 1 - (1 - t) * (1 - t))));
+    await tween(1500, t => setMask(lerp(Math.max(W, H) * 9, start, 1 - Math.pow(1 - t, 3))));
     setMask(0.01);
     const r = doorsData[cur].el.getBoundingClientRect();
     await tween(600, t => setRect(dvDoor, { x: lerp(0, r.x, t), y: lerp(0, r.y, t), w: lerp(W, r.width, t), h: lerp(H, r.height, t) }));
@@ -497,11 +483,35 @@ document.getElementById('dvBuy').onclick = async () => {
   document.getElementById('tariffs').scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
-/* ================= 5. japan strip ================= */
-{
-  const tr = document.getElementById('jpTrack');
-  const imgs = [1, 2, 3, 4, 5, 6].map(i => `<img src="assets/jp_${i}.webp" alt="">`).join('');
-  tr.innerHTML = imgs + imgs;
+/* ================= 5. photo line ================= */
+const pline = document.getElementById('pline');
+const LINE = [1, 2, 3, 4, 5].map(i => `assets/line_${i}.webp`);
+const SLOTS_N = 9;
+const lineEls = [];
+for (let i = 0; i < SLOTS_N; i++) { const im = document.createElement('img'); im.alt = ''; pline.appendChild(im); lineEls.push(im); }
+let phase = 0;
+const fsz = u => 1 / (1 + .42 * Math.pow(Math.abs(u), 1.25));
+const Fint = (a, b) => { let t = 0; const n = 24, h = (b - a) / n; for (let i = 0; i < n; i++) t += fsz(a + (i + .5) * h) * h; return t; };
+const Fx = u => u >= 0 ? Fint(0, u) : -Fint(u, 0);
+function drawLine(dt) {
+  const W = pline.clientWidth, H = pline.clientHeight;
+  phase += dt * .32;
+  const base = Math.floor(phase), fr = phase - base;
+  const bw = W * .46, bh = H * .82;
+  const half = (SLOTS_N - 1) / 2;
+  for (let k = 0; k < SLOTS_N; k++) {
+    const off = k - half;
+    const u = off - fr;
+    const idx = ((base + off) % LINE.length + LINE.length) % LINE.length;
+    const el = lineEls[k];
+    const want = LINE[idx];
+    if (el.dataset.src !== want) { el.src = want; el.dataset.src = want; }
+    const x0 = W / 2 + bw * Fx(u - .5), x1 = W / 2 + bw * Fx(u + .5);
+    const hh = bh * fsz(u);
+    el.style.left = x0 + 'px'; el.style.width = (x1 - x0 + .5) + 'px';
+    el.style.height = hh + 'px'; el.style.transform = 'translateY(-50%)';
+    el.style.zIndex = 10 - Math.round(Math.abs(u));
+  }
 }
 
 /* ================= 7. logos ================= */
@@ -524,7 +534,7 @@ document.querySelectorAll('.ltrack').forEach(tr => {
     flippingTime: 1000, mobileScrollSupport: true, autoSize: true, swipeDistance: 20
   });
   pf.loadFromHTML(book.querySelectorAll('.page'));
-  let idle = 0;
+  let idle = 0, dir = 1;
   pf.on('flip', () => { idle = 0; });
   pf.on('changeState', e => { if (e.data !== 'read') idle = 0; });
   setInterval(() => {
@@ -532,7 +542,9 @@ document.querySelectorAll('.ltrack').forEach(tr => {
     if (r.bottom < 0 || r.top > innerHeight) return;
     if (++idle < 2) return;
     idle = 0;
-    if (pf.getCurrentPageIndex() >= pf.getPageCount() - 1) pf.flip(0); else pf.flipNext();
+    const i = pf.getCurrentPageIndex(), n = pf.getPageCount();
+    if (i >= n - 1) dir = -1; else if (i <= 0) dir = 1;
+    dir > 0 ? pf.flipNext() : pf.flipPrev();
   }, 1800);
 }
 
@@ -565,15 +577,29 @@ function drawPhone() {
   recv.style.top = (L - 2) + 'px';
   hang.style.transform = `rotate(${phy.a}deg)`;
 }
+let tiltA = 0, lastAx = null;
+addEventListener('deviceorientation', e => { if (e.gamma != null) tiltA = clamp(-e.gamma * .8, -32, 32); });
+addEventListener('devicemotion', e => {
+  const a = e.accelerationIncludingGravity;
+  if (!a || a.x == null) return;
+  if (lastAx != null) phy.va += clamp((a.x - lastAx) * 6, -40, 40);
+  lastAx = a.x;
+});
+document.getElementById('phone').addEventListener('touchend', function ask() {
+  const D = window.DeviceOrientationEvent, M = window.DeviceMotionEvent;
+  if (D && typeof D.requestPermission === 'function') D.requestPermission().catch(() => {});
+  if (M && typeof M.requestPermission === 'function') M.requestPermission().catch(() => {});
+  this.removeEventListener('touchend', ask);
+}, { passive: true });
 function stepPhone(dt) {
   const ds = scrollY - lastScroll; lastScroll = scrollY;
   // inertia: page moves, receiver lags behind
   phy.vy += ds * 5; phy.va += ds * .3 * (Math.sin(performance.now() / 300) > 0 ? 1 : -.6);
   const k = 38, c = 4.2, ka = 22, ca = 2.6;
   phy.vy += (-k * phy.y - c * phy.vy) * dt;
-  phy.va += (-ka * phy.a - ca * phy.va) * dt;
+  phy.va += (-ka * (phy.a - tiltA) - ca * phy.va) * dt;
   phy.y = clamp(phy.y + phy.vy * dt, -innerWidth * .25, innerWidth * .45);
-  phy.a = clamp(phy.a + phy.va * dt, -9, 9);
+  phy.a = clamp(phy.a + phy.va * dt, -40, 40);
 }
 
 /* ================= main loop ================= */
@@ -593,14 +619,16 @@ function tick() {
   // keyhole
   const kr = khSec.getBoundingClientRect();
   if (kr.top < innerHeight && kr.bottom > 0) drawKeyhole(progress(khSec));
+  const dr = doorsSec.getBoundingClientRect();
+  if (dr.top < innerHeight * 1.2 && dr.bottom > 0) drawFallenKey();
+  const lr = pline.getBoundingClientRect();
+  if (lr.top < innerHeight && lr.bottom > 0) drawLine(dt);
   // phone
   stepPhone(dt);
   const pr = document.getElementById('phone').getBoundingClientRect();
   if (pr.top < innerHeight && pr.bottom > 0) drawPhone();
   requestAnimationFrame(tick);
 }
-buildKeyholeSvg();
-addEventListener('resize', () => { buildKeyholeSvg(); });
 if (!curL) requestAnimationFrame(() => {}); // tick starts after curtains load
 })();
 </script>
