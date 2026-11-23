@@ -26,25 +26,25 @@ section{position:relative;width:100%}
 #hero{height:230svh}
 #hero .sticky{background:var(--beige);--ftop:max(5svh, calc((100svh - var(--col) * 1.3) * .66))}
 .face{position:absolute;left:2%;width:96%;top:var(--ftop)}
-.headline{position:absolute;left:0;right:0;top:calc(var(--ftop) + var(--col) * 1.05);text-align:center;
-  font-family:'Rubik Spray Paint',sans-serif;font-size:calc(var(--col) * .086);line-height:1.08;letter-spacing:-.01em;padding:0 2%;white-space:nowrap}
-.headline .ch{display:inline-block;background:linear-gradient(180deg,#7d0815 0%,#b3121f 55%,#d01c2c 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.headline.glint .ch{animation:flick 3s ease-in-out both;animation-delay:var(--d)}
-.headline .shine{position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(105deg,transparent 35%,rgba(255,245,225,.95) 48%,rgba(255,255,255,1) 50%,rgba(255,245,225,.95) 52%,transparent 65%);
-  background-size:300% 100%;background-position:120% 0;mix-blend-mode:soft-light;opacity:0}
+.headline{position:absolute;left:0;right:0;top:calc(var(--ftop) + var(--col) * 1.03);text-align:center;margin:0}
+.hl-wrap{position:relative;display:inline-block;width:92%}
+.hl-img{width:100%;height:auto}
+.headline.glint .hl-img{animation:flick 3s ease-in-out both}
+.headline .shine{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,248,232,.95) 48%,#fff 50%,rgba(255,248,232,.95) 52%,transparent 62%);
+  background-size:300% 100%;background-position:120% 0;
+  -webkit-mask-image:url(assets/title_yulia.webp);mask-image:url(assets/title_yulia.webp);-webkit-mask-size:100% 100%;mask-size:100% 100%}
 .headline.glint .shine{animation:sweep 3s ease-in-out both}
 @keyframes flick{
-  0%{filter:brightness(1);opacity:1}
-  8%{filter:brightness(2.4) drop-shadow(0 0 6px #fff2d6);opacity:.55}
-  14%{filter:brightness(1);opacity:1}
-  27%{filter:brightness(1.9) drop-shadow(0 0 8px #ffe9c4);opacity:.7}
-  33%{filter:brightness(1);opacity:1}
-  52%{filter:brightness(2.2) drop-shadow(0 0 5px #fff);opacity:.6}
-  58%{filter:brightness(1.1);opacity:1}
-  74%{filter:brightness(1.7) drop-shadow(0 0 4px #fff3dc);opacity:.85}
-  82%,100%{filter:brightness(1);opacity:1}
+  0%{filter:brightness(1)}
+  8%{filter:brightness(1.9) drop-shadow(0 0 6px #fff2d6)}
+  14%{filter:brightness(1)}
+  27%{filter:brightness(1.6) drop-shadow(0 0 8px #ffe9c4)}
+  33%{filter:brightness(1)}
+  52%{filter:brightness(1.8) drop-shadow(0 0 5px #fff)}
+  58%{filter:brightness(1.05)}
+  74%{filter:brightness(1.4) drop-shadow(0 0 4px #fff3dc)}
+  82%,100%{filter:brightness(1)}
 }
 @keyframes sweep{0%{background-position:120% 0;opacity:1}90%{opacity:1}100%{background-position:-20% 0;opacity:0}}
 #curtains{position:absolute;left:0;top:0;width:100%;height:calc(var(--ftop) + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
@@ -89,9 +89,10 @@ section{position:relative;width:100%}
 
 /* ---------- 4. about ---------- */
 #about{padding-top:7%;overflow:hidden}
-.about-h{font-family:'Pacifico',cursive;font-size:calc(var(--col)*.16);text-align:center;color:#a8152a;line-height:1.3;font-weight:400}
-.about-h span{font-size:.45em;vertical-align:-.1em}
-.about-t{position:relative;z-index:2;text-align:center;text-transform:uppercase;font-size:calc(var(--col)*.047);line-height:1.25;color:#a8152a;padding:2% 4% 0}
+.about-h{text-align:center;margin:0}
+.about-h img{display:inline-block;width:62%;height:auto}
+.about-t{position:relative;z-index:2;padding:3% 3% 0;margin:0}
+.about-t img{width:100%;height:auto}
 .about-p{width:100%;margin-top:-6%;position:relative;z-index:1}
 
 /* ---------- 5. japan ---------- */
@@ -153,7 +154,7 @@ section{position:relative;width:100%}
 <section id="hero">
   <div class="sticky">
     <img class="face" src="assets/face.webp" alt="Юлия Гнедчик">
-    <h1 class="headline" id="headline" aria-label="Твои ключи к модельной славе">ТВОИ КЛЮЧИ К<br>МОДЕЛЬНОЙ СЛАВЕ<span class="shine"></span></h1>
+    <h1 class="headline" id="headline"><span class="hl-wrap"><img class="hl-img" src="assets/title_yulia.webp" alt="Твои ключи к модельной славе"><span class="shine"></span></span></h1>
     <canvas id="curtains"></canvas>
   </div>
 </section>
@@ -178,8 +179,8 @@ section{position:relative;width:100%}
 
 <!-- 4. About -->
 <section id="about">
-  <h2 class="about-h">Обо мне <span>♥</span></h2>
-  <p class="about-t">Меня зовут Юлия Гнедчик. В модельной индустрии работаю уже 15 лет и знаю всю изнанку модельного мира. Два года являлась директором московского модельного агентства. На постоянной основе работаю скаутом для российских агентств. Имею связи по всему миру. Работала в Японии на контракте, во Франции и Дубае на дайрект съёмках.</p>
+  <h2 class="about-h"><img src="assets/about_yulia.webp" alt="Обо мне"></h2>
+  <p class="about-t"><img src="assets/about_text.webp" alt="Меня зовут Юлия Гнедчик. В модельной индустрии работаю уже 15 лет и знаю всю изнанку модельного мира. Два года являлась директором московского модельного агентства. На постоянной основе работаю скаутом для российских агентств. Имею связи по всему миру. Работала в Японии на контракте, во Франции и Дубае на дайрект съёмках."></p>
   <img class="about-p" src="assets/about.webp" alt="Юлия Гнедчик">
 </section>
 
@@ -293,13 +294,9 @@ const khURI = s => 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
 /* ================= 1. headline glint ================= */
 const hl = document.getElementById('headline');
 {
-  const shine = hl.querySelector('.shine');
-  const html = hl.innerHTML.replace(shine.outerHTML, '');
-  const parts = html.split('<br>');
-  hl.innerHTML = parts.map(p => [...p].map(c => c === ' ' ? ' ' : `<span class="ch" style="--d:${(Math.random() * 0.35).toFixed(2)}s">${c}</span>`).join('')).join('<br>') ;
-  hl.appendChild(shine);
   const start = () => { hl.classList.remove('glint'); void hl.offsetWidth; hl.classList.add('glint'); };
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(start);
+  const img = hl.querySelector('img');
+  img.complete ? start() : img.addEventListener('load', start);
 }
 
 /* ================= 1. curtains ================= */
