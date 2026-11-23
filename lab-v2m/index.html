@@ -52,7 +52,7 @@ section{position:relative;width:100%}
 /* ---------- 2. keyhole ---------- */
 #keyhole{height:330svh;background:#000}
 #keyhole .sticky{background:#000}
-.kh-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.kh-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:100% 50%}
 .kh-wrap{position:absolute;left:0;top:0;width:calc(var(--col)*1.19);aspect-ratio:736/920;transform-origin:0 0;will-change:transform}
 .kh-frame{position:absolute;inset:0;width:100%;height:100%;box-shadow:0 0 0 300vmax #000}
 .kh-brush,.kh-letters{position:absolute;inset:0;width:100%;height:100%}
@@ -72,7 +72,7 @@ section{position:relative;width:100%}
 .door .hint{position:absolute;left:0;right:0;top:3%;text-align:center;font-family:'Bad Script',cursive;color:#fff;font-size:calc(var(--col)*.058);line-height:1.05;pointer-events:none}
 .door .hint b{font-weight:400;display:inline-block;margin:0 .3em}
 .door .khole{position:absolute;left:50%;top:58%;width:6%;height:auto;transform:translate(-50%,-50%);pointer-events:none}
-.fallen-key{position:absolute;left:22%;top:4%;width:22%;transform-origin:50% 20%;z-index:5;pointer-events:none;filter:drop-shadow(2px 4px 3px rgba(0,0,0,.45))}
+.fallen-key{position:absolute;left:calc(76% - var(--col)*.05);top:calc(3% - var(--col)*.1335 - var(--col)*.032);width:calc(var(--col)*.1);transform-origin:50% 50%;z-index:30;pointer-events:none;filter:drop-shadow(2px 4px 3px rgba(0,0,0,.45))}
 
 .door-view{position:fixed;inset:0;z-index:100;display:none}
 .door-view.on{display:block}
@@ -95,7 +95,7 @@ section{position:relative;width:100%}
 
 /* ---------- 5. japan ---------- */
 #japan{height:calc(var(--col)*1.15);overflow:hidden;background:var(--beige)}
-.pline{position:absolute;inset:0}
+.pline{position:absolute;inset:0;touch-action:pan-y;user-select:none}
 .pline img{position:absolute;top:50%;object-fit:cover;will-change:transform,width,height}
 @keyframes run{to{transform:translateX(-50%)}}
 
@@ -114,7 +114,13 @@ section{position:relative;width:100%}
 /* ---------- 8. journal ---------- */
 #journal{display:flex;align-items:center;justify-content:center;min-height:calc(var(--col)*16/9);padding:8% 0}
 .book-wrap{width:86%;margin:0 auto}
-.page{background:#fbf7f0;padding:4%;}
+#book{position:relative;width:100%;aspect-ratio:1/1.36;perspective:2200px;touch-action:pan-y;user-select:none;box-shadow:0 10px 26px rgba(60,20,10,.22)}
+.leaf{position:absolute;inset:0;transform-origin:0 50%;transform-style:preserve-3d;will-change:transform}
+.leaf .lf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fbf7f0;padding:4%;overflow:hidden}
+.leaf .lf.back{transform:rotateY(180deg);background:linear-gradient(90deg,#efe7da,#fbf7f0 30%)}
+.leaf .shade{position:absolute;inset:0;pointer-events:none;opacity:0}
+.leaf .front .shade{background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.35) 70%,rgba(255,255,255,.25))}
+.leaf .under{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(0,0,0,.45),rgba(0,0,0,0) 60%)}
 .page .pin{width:100%;height:100%;position:relative;overflow:hidden}
 .page img{width:100%;height:100%;object-fit:cover}
 .page .pn{position:absolute;bottom:2%;right:4%;font-family:'Playfair Display',serif;font-size:12px;color:#fff;mix-blend-mode:difference}
@@ -261,7 +267,6 @@ section{position:relative;width:100%}
   </defs>
 </svg>
 
-<script src="assets/vendor/page-flip.browser.js"></script>
 <script>
 (() => {
 'use strict';
@@ -326,7 +331,7 @@ function drawCurtains(t) {
     const span = left ? inner : curtainBox.w - inner;
     const notch = (left ? curtainBox.lIn - curtainBox.lMin : curtainBox.rMax - curtainBox.rIn) * sy;
     const closed = left ? W * .5 + notch + W * .07 : W * .5 - notch - W * .07;
-    const xIn = left ? lerp(closed, W * .07, e) : lerp(closed, W * .93, e);
+    const xIn = left ? lerp(closed, -W * .04, e) : lerp(closed, W * 1.04, e);
     const sw = span / strips;
     const sxk = Math.max(sy * comp, ((left ? xIn : W - xIn) + W * .04) / span); // always reach the screen edge
     for (let i = 0; i < strips; i++) {
@@ -364,8 +369,11 @@ function drawKeyhole(p) {
   const kw = W * .12;
   const ks = lerp(.6, 1.25, ease(clamp(kp / .7)));
   const fall = Math.pow(clamp((kp - .5) / .5), 2);
-  const kx = cx + 120 * k0, ky = cy - 40 * k0;
-  keyEl.style.left = (kx - kw * .3) + 'px';
+  const ph = khStage.querySelector('.kh-photo');
+  const nw = ph.naturalWidth || 966, nh = ph.naturalHeight || 1719;
+  const sc = Math.max(W / nw, H / nh);
+  const kx = (W - nw * sc) * 1 + 890 * sc, ky = (H - nh * sc) * .5 + 330 * sc;
+  keyEl.style.left = (kx - kw * .8) + 'px';
   keyEl.style.top = ky + 'px';
   keyEl.style.transform = `translateY(${fall * H * 1.2}px) rotate(${lerp(-18, 30, ease(kp)) + fall * 50}deg) scale(${ks})`;
 }
@@ -389,7 +397,6 @@ doorsData.forEach((d, i) => {
   el.className = 'door';
   el.innerHTML = `<img src="${d.src}" alt="Дверь 0${d.n}"><img class="khole" src="${keyholeImg}" alt="">
     <div class="hint">двери можно<br><b>←</b>перелистывать<b>→</b></div><div class="lbl">Дверь 0${d.n}</div>`;
-  if (d.n === 2) el.insertAdjacentHTML('beforeend', '<svg class="fallen-key" id="fallenKey" viewBox="0 0 60 160"><use href="#keyShape"/></svg>');
   d.el = el; collage.appendChild(el);
 });
 function layoutDoors() {
@@ -405,6 +412,7 @@ function layoutDoors() {
   });
 }
 layoutDoors();
+collage.insertAdjacentHTML('beforeend', '<svg class="fallen-key" id="fallenKey" viewBox="0 0 60 160"><use href="#keyShape"/></svg>');
 {
   let sx = 0, sy = 0, down = false, t0 = 0;
   collage.addEventListener('pointerdown', e => { down = true; sx = e.clientX; sy = e.clientY; t0 = Date.now(); });
@@ -426,7 +434,7 @@ function drawFallenKey() {
   const r = doorsSec.getBoundingClientRect();
   const kp = clamp((innerHeight - r.top) / (innerHeight * .95));
   const y = (1 - bounce(kp)) * -innerHeight * .9;
-  fk.style.transform = `translateY(${y}px) rotate(${lerp(-80, -35, kp)}deg)`;
+  fk.style.transform = `translateY(${y}px) rotate(${lerp(-200, -90, Math.min(1, kp * 1.15))}deg)`;
 }
 /* door view (zoom door, then keyhole grows into the info screen) */
 const dv = document.getElementById('dv'), dvDoor = document.getElementById('dvDoor'), dvInfo = document.getElementById('dvInfo');
@@ -441,39 +449,52 @@ function tween(ms, fn) {
   });
 }
 function setRect(el, r) { Object.assign(el.style, { left: r.x + 'px', top: r.y + 'px', width: r.w + 'px', height: r.h + 'px' }); }
-function setMask(size) {
-  // keyhole centre on screen = (50%, 58%) like on the door
-  const W = innerWidth, H = innerHeight;
+function setMask(size, cx, cy) {
   const w = size, h = size * 158 / 108;
-  const x = W * .5 - w / 2, y = H * .58 - h * .62;
   dvInfo.style.webkitMaskSize = dvInfo.style.maskSize = `${w}px ${h}px`;
-  dvInfo.style.webkitMaskPosition = dvInfo.style.maskPosition = `${x}px ${y}px`;
+  dvInfo.style.webkitMaskPosition = dvInfo.style.maskPosition = `${cx - w / 2}px ${cy - h / 2}px`;
+}
+let zoomBase = null;
+function zoomTo(t) {
+  // t: 0 = door as on the card, 1 = keyhole fills the screen
+  const { r, W, H, smax } = zoomBase;
+  const u = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const s = Math.exp(Math.log(smax) * u);
+  const k0x = r.x + r.w * .5, k0y = r.y + r.h * .58;
+  const m = ease(clamp(t * 1.6));
+  const kx = lerp(k0x, W * .5, m), ky = lerp(k0y, H * .5, m);
+  dvDoor.style.transform = `translate(${kx - k0x}px, ${ky - k0y}px) scale(${Math.min(s, 60)})`;
+  setMask(r.w * .06 * s, kx, ky);
+}
+function animate(ms, from, to, fn) {
+  return new Promise(res => {
+    const t0 = performance.now();
+    const step = now => { const t = clamp((now - t0) / ms); fn(lerp(from, to, t)); t < 1 ? requestAnimationFrame(step) : res(); };
+    requestAnimationFrame(step);
+  });
 }
 async function openDoor(d) {
   if (anim) return; anim = true;
-  const r = d.el.getBoundingClientRect();
-  openRect = { x: r.x, y: r.y, w: r.width, h: r.height };
+  const b = d.el.getBoundingClientRect();
+  const W = innerWidth, H = innerHeight;
+  zoomBase = { r: { x: b.x, y: b.y, w: b.width, h: b.height }, W, H, smax: 5 * Math.max(W, H) / (b.width * .06) };
   dvDoor.src = d.src;
   document.getElementById('dvTitle').textContent = `Дверь 0${d.n}`;
-  setRect(dvDoor, openRect);
-  setMask(0.01);
+  setRect(dvDoor, zoomBase.r);
+  dvDoor.style.transformOrigin = '50% 58%';
+  zoomTo(0);
   dv.classList.add('on'); document.body.style.overflow = 'hidden';
-  const W = innerWidth, H = innerHeight, full = { x: 0, y: 0, w: W, h: H };
-  await tween(650, t => setRect(dvDoor, { x: lerp(openRect.x, 0, t), y: lerp(openRect.y, 0, t), w: lerp(openRect.w, W, t), h: lerp(openRect.h, H, t) }));
-  const start = W * .055;
-  await tween(2200, t => setMask(lerp(start, Math.max(W, H) * 9, t * t * t)));
+  await animate(2600, 0, 1, zoomTo);
   dv.classList.add('ready'); anim = false;
 }
 async function closeDoor(instant) {
   if (anim) return; anim = true;
   dv.classList.remove('ready');
-  const W = innerWidth, H = innerHeight;
-  if (!instant) {
-    const start = W * .055;
-    await tween(1500, t => setMask(lerp(Math.max(W, H) * 9, start, 1 - Math.pow(1 - t, 3))));
-    setMask(0.01);
-    const r = doorsData[cur].el.getBoundingClientRect();
-    await tween(600, t => setRect(dvDoor, { x: lerp(0, r.x, t), y: lerp(0, r.y, t), w: lerp(W, r.width, t), h: lerp(H, r.height, t) }));
+  if (!instant && zoomBase) {
+    const b = doorsData[cur].el.getBoundingClientRect();
+    zoomBase.r = { x: b.x, y: b.y, w: b.width, h: b.height };
+    setRect(dvDoor, zoomBase.r);
+    await animate(1900, 1, 0, zoomTo);
   }
   dv.classList.remove('on'); document.body.style.overflow = ''; anim = false;
 }
@@ -485,32 +506,53 @@ document.getElementById('dvBuy').onclick = async () => {
 
 /* ================= 5. photo line ================= */
 const pline = document.getElementById('pline');
-const LINE = [1, 2, 3, 4, 5].map(i => `assets/line_${i}.webp`);
-const SLOTS_N = 9;
-const lineEls = [];
-for (let i = 0; i < SLOTS_N; i++) { const im = document.createElement('img'); im.alt = ''; pline.appendChild(im); lineEls.push(im); }
-let phase = 0;
+const LINE = [1, 2, 3, 4, 5].map(i => ({ src: `assets/line_${i}.webp`, a: .75 }));
+LINE.forEach(it => { const im = new Image(); im.onload = () => { it.a = im.naturalWidth / im.naturalHeight; }; im.src = it.src; });
+const COPIES = 3, lineEls = [];
+for (let c = 0; c < COPIES; c++) LINE.forEach(it => { const im = document.createElement('img'); im.src = it.src; im.alt = ''; im.draggable = false; pline.appendChild(im); lineEls.push(im); });
 const fsz = u => 1 / (1 + .42 * Math.pow(Math.abs(u), 1.25));
 const Fint = (a, b) => { let t = 0; const n = 24, h = (b - a) / n; for (let i = 0; i < n; i++) t += fsz(a + (i + .5) * h) * h; return t; };
 const Fx = u => u >= 0 ? Fint(0, u) : -Fint(u, 0);
+let lineOff = 0, lineV = 0, lineDrag = null, lineIdle = 9;
+pline.addEventListener('pointerdown', e => { lineDrag = { x: e.clientX, y: e.clientY, t: performance.now(), on: false }; lineV = 0; });
+addEventListener('pointermove', e => {
+  if (!lineDrag) return;
+  const dx = e.clientX - lineDrag.x, dy = e.clientY - lineDrag.y;
+  if (!lineDrag.on) { if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) lineDrag.on = true; else if (Math.abs(dy) > 10) { lineDrag = null; return; } else return; }
+  const now = performance.now(), dt = Math.max(1, now - lineDrag.t);
+  lineOff -= dx * 1.4; lineV = -dx * 1.4 / dt * 1000;
+  lineDrag.x = e.clientX; lineDrag.y = e.clientY; lineDrag.t = now; lineIdle = 0;
+});
+addEventListener('pointerup', () => { lineDrag = null; });
+addEventListener('pointercancel', () => { lineDrag = null; });
 function drawLine(dt) {
   const W = pline.clientWidth, H = pline.clientHeight;
-  phase += dt * .32;
-  const base = Math.floor(phase), fr = phase - base;
-  const bw = W * .46, bh = H * .82;
-  const half = (SLOTS_N - 1) / 2;
-  for (let k = 0; k < SLOTS_N; k++) {
-    const off = k - half;
-    const u = off - fr;
-    const idx = ((base + off) % LINE.length + LINE.length) % LINE.length;
-    const el = lineEls[k];
-    const want = LINE[idx];
-    if (el.dataset.src !== want) { el.src = want; el.dataset.src = want; }
-    const x0 = W / 2 + bw * Fx(u - .5), x1 = W / 2 + bw * Fx(u + .5);
-    const hh = bh * fsz(u);
-    el.style.left = x0 + 'px'; el.style.width = (x1 - x0 + .5) + 'px';
-    el.style.height = hh + 'px'; el.style.transform = 'translateY(-50%)';
-    el.style.zIndex = 10 - Math.round(Math.abs(u));
+  const bh = H * .82, L = W * .46;
+  const auto = W * .16;
+  lineIdle += dt;
+  if (!lineDrag) {
+    lineV *= Math.pow(.05, dt);                   // inertia after a swipe
+    const k = clamp((lineIdle - 1.2) / 1.5);       // auto speed comes back after a pause
+    lineOff += (lineV + auto * k) * dt;
+  }
+  const widths = LINE.map(it => bh * it.a);
+  const T = widths.reduce((a, b) => a + b, 0);
+  const off = ((lineOff % T) + T) % T;
+  let n = 0;
+  for (let c = -1; c <= 1; c++) {
+    let e = c * T - off - widths[0] / 2;
+    LINE.forEach((it, i) => {
+      const el = lineEls[n++];
+      const x0 = W / 2 + L * Fx(e / L), x1 = W / 2 + L * Fx((e + widths[i]) / L);
+      const mid = (e + widths[i] / 2) / L;
+      e += widths[i];
+      if (x1 < -2 || x0 > W + 2) { el.style.display = 'none'; return; }
+      el.style.display = '';
+      const hh = bh * fsz(mid);
+      el.style.left = x0 + 'px'; el.style.width = (x1 - x0 + .5) + 'px';
+      el.style.height = hh + 'px'; el.style.transform = 'translateY(-50%)';
+      el.style.zIndex = 10 - Math.round(Math.abs(mid));
+    });
   }
 }
 
@@ -526,26 +568,79 @@ document.querySelectorAll('.ltrack').forEach(tr => {
 {
   const pages = ['door02', 'face', 'door05', 'about', 'door04', 'door06', 'door03', 'door01'];
   const book = document.getElementById('book');
-  book.innerHTML = pages.map((p, i) => `<div class="page"><div class="pin"><img src="assets/${p}.webp" alt=""><span class="pn">${String(i + 1).padStart(2, '0')}</span></div></div>`).join('');
-  const w = book.parentElement.clientWidth;
-  const pf = new St.PageFlip(book, {
-    width: Math.round(w), height: Math.round(w * 1.36), size: 'fixed',
-    usePortrait: true, showCover: false, drawShadow: true, maxShadowOpacity: .6,
-    flippingTime: 1000, mobileScrollSupport: true, autoSize: true, swipeDistance: 20
+  const N = pages.length;
+  book.innerHTML = pages.map((p, i) => `<div class="leaf" style="z-index:${N - i}">
+    <div class="lf front page"><div class="pin"><img src="assets/${p}.webp" alt="" draggable="false"><span class="pn">${String(i + 1).padStart(2, '0')}</span></div><div class="shade"></div><div class="under"></div></div>
+    <div class="lf back"></div></div>`).join('');
+  const leaves = [...book.querySelectorAll('.leaf')];
+  let cur = 0, busy = false, lastTouch = -1e9, dir = 1;
+  // angle of a leaf: 0 = lying on the stack, 180 = turned over to the left
+  function setAngle(i, a) {
+    const L = leaves[i];
+    L.style.visibility = a >= 179.5 ? 'hidden' : 'visible';
+    L.style.transform = `rotateY(${-a}deg)`;
+    L.style.zIndex = a > 0 && a < 180 ? 100 : (N - i);
+    L.querySelector('.front .shade').style.opacity = Math.sin(a / 180 * Math.PI) * .9;
+    const nx = leaves[i + 1];
+    if (nx) nx.querySelector('.under').style.opacity = a > 0 && a < 180 ? (1 - a / 180) * .8 : 0;
+  }
+  leaves.forEach((_, i) => setAngle(i, 0));
+  function turn(i, from, to, ms) {
+    busy = true;
+    return new Promise(res => {
+      const t0 = performance.now();
+      const step = now => {
+        const t = clamp((now - t0) / ms), e = 1 - Math.pow(1 - t, 3);
+        setAngle(i, lerp(from, to, e));
+        if (t < 1) requestAnimationFrame(step); else { busy = false; res(); }
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  const next = async () => { if (busy || cur >= N - 1) return; await turn(cur, 0, 180, 1100); cur++; };
+  const prev = async () => { if (busy || cur <= 0) return; cur--; await turn(cur, 180, 0, 1100); };
+  // finger: drag left = next page, drag right = previous page (page comes back the same way)
+  let drag = null;
+  book.addEventListener('pointerdown', e => { if (busy) return; drag = { x: e.clientX, y: e.clientY, on: false, i: -1, a: 0, v: 0, t: performance.now() }; lastTouch = performance.now(); });
+  addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.on) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+        drag.on = true;
+        if (dx < 0 && cur < N - 1) { drag.i = cur; drag.fwd = true; }
+        else if (dx > 0 && cur > 0) { drag.i = cur - 1; drag.fwd = false; }
+        else { drag = null; return; }
+      } else if (Math.abs(dy) > 10) { drag = null; return; } else return;
+    }
+    const w = book.clientWidth;
+    const prog = clamp(Math.abs(dx) / (w * .9));
+    const a = drag.fwd ? prog * 180 : 180 - prog * 180;
+    const now = performance.now();
+    drag.v = (a - drag.a) / Math.max(1, now - drag.t); drag.a = a; drag.t = now;
+    setAngle(drag.i, a);
+    lastTouch = now;
   });
-  pf.loadFromHTML(book.querySelectorAll('.page'));
-  let idle = 0, dir = 1;
-  pf.on('flip', () => { idle = 0; });
-  pf.on('changeState', e => { if (e.data !== 'read') idle = 0; });
+  const end = async () => {
+    if (!drag) return;
+    const d = drag; drag = null; lastTouch = performance.now();
+    if (!d.on || d.i < 0) return;
+    const prog = d.fwd ? d.a / 180 : 1 - d.a / 180;
+    const fling = d.fwd ? d.v > .25 : d.v < -.25;
+    const done = prog > .33 || fling;
+    const target = d.fwd ? (done ? 180 : 0) : (done ? 0 : 180);
+    await turn(d.i, d.a, target, 520);
+    if (done) cur += d.fwd ? 1 : -1;
+  };
+  addEventListener('pointerup', end); addEventListener('pointercancel', end);
+  // auto: page by page to the end, then back the same way
   setInterval(() => {
     const r = book.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    if (++idle < 2) return;
-    idle = 0;
-    const i = pf.getCurrentPageIndex(), n = pf.getPageCount();
-    if (i >= n - 1) dir = -1; else if (i <= 0) dir = 1;
-    dir > 0 ? pf.flipNext() : pf.flipPrev();
-  }, 1800);
+    if (r.bottom < 0 || r.top > innerHeight || busy || drag) return;
+    if (performance.now() - lastTouch < 5000) return;
+    if (cur >= N - 1) dir = -1; else if (cur <= 0) dir = 1;
+    dir > 0 ? next() : prev();
+  }, 3000);
 }
 
 /* ================= 10. hanging receiver ================= */
@@ -569,20 +664,22 @@ function drawPhone() {
   d += `L30 ${L.toFixed(1)}`;
   const sw = W * .016;
   cordSvg.setAttribute('width', 60); cordSvg.setAttribute('height', Math.ceil(L + 4));
-  cordSvg.innerHTML = `<path d="${d}" fill="none" stroke="#3e070c" stroke-width="${sw}" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="${d}" fill="none" stroke="#9a3038" stroke-width="${sw * .3}" stroke-linejoin="round" stroke-linecap="round" transform="translate(-${sw * .22} 0)" opacity=".8"/>`;
+  if (!cordSvg.firstChild) cordSvg.innerHTML = '<path fill="none" stroke="#3e070c" stroke-linejoin="round" stroke-linecap="round"/><path fill="none" stroke="#9a3038" stroke-linejoin="round" stroke-linecap="round" opacity=".8"/>';
+  const [p1, p2] = cordSvg.children;
+  p1.setAttribute('d', d); p1.setAttribute('stroke-width', sw);
+  p2.setAttribute('d', d); p2.setAttribute('stroke-width', sw * .3); p2.setAttribute('transform', `translate(-${sw * .22} 0)`);
   // receiver attach point: cord stub at ~35% of its width, top edge
   const rw = recv.clientWidth;
   recv.style.left = (-rw * .355) + 'px';
   recv.style.top = (L - 2) + 'px';
   hang.style.transform = `rotate(${phy.a}deg)`;
 }
-let tiltA = 0, lastAx = null;
+let tiltA = 0, lastAx = null, phoneVisible = false;
 addEventListener('deviceorientation', e => { if (e.gamma != null) tiltA = clamp(-e.gamma * .8, -32, 32); });
 addEventListener('devicemotion', e => {
   const a = e.accelerationIncludingGravity;
   if (!a || a.x == null) return;
-  if (lastAx != null) phy.va += clamp((a.x - lastAx) * 6, -40, 40);
+  if (lastAx != null && phoneVisible) phy.va += clamp((a.x - lastAx) * 3, -25, 25);
   lastAx = a.x;
 });
 document.getElementById('phone').addEventListener('touchend', function ask() {
@@ -592,9 +689,10 @@ document.getElementById('phone').addEventListener('touchend', function ask() {
   this.removeEventListener('touchend', ask);
 }, { passive: true });
 function stepPhone(dt) {
-  const ds = scrollY - lastScroll; lastScroll = scrollY;
-  // inertia: page moves, receiver lags behind
-  phy.vy += ds * 5; phy.va += ds * .3 * (Math.sin(performance.now() / 300) > 0 ? 1 : -.6);
+  const ds = clamp(scrollY - lastScroll, -120, 120); lastScroll = scrollY;
+  if (!phoneVisible) { phy.y = phy.vy = phy.va = 0; phy.a = tiltA; return; }
+  // inertia: page moves, receiver lags behind and swings
+  phy.vy += ds * 5; phy.va += ds * .35;
   const k = 38, c = 4.2, ka = 22, ca = 2.6;
   phy.vy += (-k * phy.y - c * phy.vy) * dt;
   phy.va += (-ka * (phy.a - tiltA) - ca * phy.va) * dt;
@@ -624,9 +722,10 @@ function tick() {
   const lr = pline.getBoundingClientRect();
   if (lr.top < innerHeight && lr.bottom > 0) drawLine(dt);
   // phone
-  stepPhone(dt);
   const pr = document.getElementById('phone').getBoundingClientRect();
-  if (pr.top < innerHeight && pr.bottom > 0) drawPhone();
+  phoneVisible = pr.top < innerHeight && pr.bottom > 0;
+  stepPhone(dt);
+  if (phoneVisible) drawPhone();
   requestAnimationFrame(tick);
 }
 if (!curL) requestAnimationFrame(() => {}); // tick starts after curtains load
