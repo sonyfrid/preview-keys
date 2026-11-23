@@ -24,9 +24,9 @@ section{position:relative;width:100%}
 
 /* ---------- 1. hero ---------- */
 #hero{height:230svh}
-#hero .sticky{background:var(--beige)}
-.face{position:absolute;left:2%;width:96%;top:12%}
-.headline{position:absolute;left:0;right:0;top:calc(12% + var(--col) * 1.05);text-align:center;
+#hero .sticky{background:var(--beige);--ftop:max(5svh, calc((100svh - var(--col) * 1.3) * .66))}
+.face{position:absolute;left:2%;width:96%;top:var(--ftop)}
+.headline{position:absolute;left:0;right:0;top:calc(var(--ftop) + var(--col) * 1.05);text-align:center;
   font-family:'Rubik Spray Paint',sans-serif;font-size:calc(var(--col) * .086);line-height:1.08;letter-spacing:-.01em;padding:0 2%;white-space:nowrap}
 .headline .ch{display:inline-block;background:linear-gradient(180deg,#7d0815 0%,#b3121f 55%,#d01c2c 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent}
@@ -47,18 +47,18 @@ section{position:relative;width:100%}
   82%,100%{filter:brightness(1);opacity:1}
 }
 @keyframes sweep{0%{background-position:120% 0;opacity:1}90%{opacity:1}100%{background-position:-20% 0;opacity:0}}
-#curtains{position:absolute;left:0;top:0;width:100%;height:calc(12% + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
+#curtains{position:absolute;left:0;top:0;width:100%;height:calc(var(--ftop) + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
 
 /* ---------- 2. keyhole ---------- */
 #keyhole{height:330svh;background:#000}
 #keyhole .sticky{background:#000}
 .kh-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:100% 50%}
-.kh-wrap{position:absolute;left:0;top:0;width:calc(var(--col)*1.19);aspect-ratio:736/920;transform-origin:0 0;will-change:transform}
+.kh-wrap{position:absolute;z-index:2;left:0;top:0;width:calc(var(--col)*1.19);aspect-ratio:736/920;transform-origin:0 0;will-change:transform}
 .kh-frame{position:absolute;inset:0;width:100%;height:100%;box-shadow:0 0 0 300vmax #000}
 .kh-brush,.kh-letters{position:absolute;inset:0;width:100%;height:100%}
 .kh-brush path{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;opacity:.92}
 .kh-brush path.b2{stroke-width:1.2;opacity:.45}
-.key{position:absolute;width:calc(var(--col)*.12);pointer-events:none;transform-origin:30% 12%;will-change:transform}
+.key{position:absolute;z-index:1;width:calc(var(--col)*.12);pointer-events:none;transform-origin:30% 12%;will-change:transform}
 
 /* ---------- 3. doors ---------- */
 #doors{height:100svh;min-height:calc(var(--col)*1.6);background:var(--beige);overflow:hidden;touch-action:pan-y}
@@ -95,7 +95,7 @@ section{position:relative;width:100%}
 .about-p{width:100%;margin-top:-6%;position:relative;z-index:1}
 
 /* ---------- 5. japan ---------- */
-#japan{height:calc(var(--col)*1.15);overflow:hidden;background:var(--beige)}
+#japan{height:calc(var(--col)*.98);overflow:hidden;background:var(--beige)}
 .pline{position:absolute;inset:0;touch-action:pan-y;user-select:none}
 .pline img{position:absolute;top:50%;object-fit:cover;will-change:transform,width,height}
 @keyframes run{to{transform:translateX(-50%)}}
@@ -106,15 +106,15 @@ section{position:relative;width:100%}
 .vbox video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* ---------- 7. logos ---------- */
-#logos{padding:9% 0;display:flex;flex-direction:column;gap:22px;justify-content:center}
+#logos{padding:7% 0 2%;display:flex;flex-direction:column;gap:22px;justify-content:center}
 .lrow{overflow:hidden;width:100%}
 .lrow .ltrack{display:flex;gap:26px;width:max-content;animation:run 45s linear infinite}
 .lrow.rev .ltrack{animation-direction:reverse}
 .ltrack img{width:calc(var(--col)*.34);aspect-ratio:4/3;object-fit:cover;filter:grayscale(1) contrast(1.1);border:1px solid rgba(76,10,18,.25)}
 
 /* ---------- 8. journal ---------- */
-#journal{display:flex;align-items:center;justify-content:center;min-height:calc(var(--col)*16/9);padding:8% 0}
-.book-wrap{width:82%;margin:0 auto;position:relative}
+#journal{display:flex;align-items:center;justify-content:center;padding:5% 0 6%}
+.book-wrap{width:90%;margin:0 0 0 3%;position:relative}
 .book-clip{position:relative;overflow:hidden;box-shadow:0 10px 26px rgba(60,20,10,.22)}
 #book{position:relative}
 .page{background:#fbf7f0;padding:4%}
@@ -128,11 +128,11 @@ section{position:relative;width:100%}
 
 /* ---------- 10. phone + contacts ---------- */
 #phone{overflow:hidden;padding-bottom:12%}
-.ph-top{position:relative;height:calc(var(--col)*1.22)}
-.hang{position:absolute;left:24%;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
+.ph-top{position:relative;height:calc(var(--col)*1.22);overflow:hidden}
+.hang{position:absolute;left:19%;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
 .hang svg{position:absolute;left:-30px;top:0;overflow:visible}
 .hang img{position:absolute;width:calc(var(--col)*.23);max-width:none}
-.ready{position:absolute;left:47%;top:46%;color:#5b0d14}
+.ready{position:absolute;left:53%;top:46%;color:#5b0d14;z-index:2}
 .ready .a{font-family:'Playfair Display',serif;font-size:calc(var(--col)*.18);line-height:.98;letter-spacing:.01em}
 .ready .r{font-family:'Great Vibes',cursive;font-size:calc(var(--col)*.17);line-height:.7;margin-left:-4%}
 .contacts{padding:0 8%;color:#2a0d0f}
@@ -534,7 +534,7 @@ addEventListener('pointerup', () => { lineDrag = null; });
 addEventListener('pointercancel', () => { lineDrag = null; });
 function drawLine(dt) {
   const W = pline.clientWidth, H = pline.clientHeight;
-  const bh = H * .82, L = W * .46;
+  const bh = H * .9, L = W * .46;
   const auto = W * .16;
   lineIdle += dt;
   if (!lineDrag) {
@@ -592,16 +592,49 @@ document.querySelectorAll('.ltrack').forEach(tr => {
     drawShadow: true, maxShadowOpacity: .6, flippingTime: 1000, mobileScrollSupport: true, swipeDistance: 20
   });
   pf.loadFromHTML(book.querySelectorAll('.page'));
-  let lastTouch = -1e9, dir = 1;
+  let lastTouch = -1e9, dir = 1, simBusy = false;
+  const PATH_Y = t => h * .93 - Math.sin(Math.PI * t) * h * .14;     // corner lifts a bit on the way
+  const easeIO = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  // drive the library's own drag: x goes from xa to xb (book coordinates, right page = w..2w)
+  function simDrag(xa, xb, ms, before) {
+    return new Promise(res => {
+      simBusy = true;
+      if (before) before();
+      pf.startUserTouch({ x: 2 * w - 3, y: h * .93 });
+      pf.userMove({ x: 2 * w - 12, y: h * .93 - 2 }, true);    // grab the bottom-right corner
+      const t0 = performance.now();
+      const pos = t => { const u = xa < xb ? 1 - t : t; const e = easeIO(t); return { x: lerp(xa, xb, e), y: PATH_Y(xa < xb ? 1 - e : e) }; };
+      pf.userMove(pos(0), true);
+      const step = now => {
+        const t = clamp((now - t0) / ms);
+        const q = pos(t);
+        pf.userMove(q, true);
+        if (t < 1) requestAnimationFrame(step);
+        else { pf.userStop(q); setTimeout(() => { simBusy = false; res(); }, 450); }
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  const FAR = w * .06, NEAR = 2 * w - 3;
+  const goNext = () => { const i = pf.getCurrentPageIndex(); if (simBusy || i >= pf.getPageCount() - 2) return; simDrag(NEAR, FAR, 950); };
+  const goPrev = () => {
+    const i = pf.getCurrentPageIndex(); if (simBusy || i <= 0) return;
+    // show the previous spread with its right page already almost turned, then bring it back along the same path
+    simDrag(FAR, NEAR, 950, () => pf.turnToPage(i - 2));
+  };
+  // swipes from the library use the same animations
+  pf.flipNext = () => setTimeout(goNext, 0);
+  pf.flipPrev = () => setTimeout(goPrev, 0);
   book.addEventListener('pointerdown', () => { lastTouch = performance.now(); });
+  book.addEventListener('touchstart', () => { lastTouch = performance.now(); }, { passive: true });
   pf.on('changeState', e => { if (e.data !== 'read') lastTouch = performance.now(); });
   setInterval(() => {
     const r = clip.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > innerHeight) return;
+    if (r.bottom < 0 || r.top > innerHeight || simBusy) return;
     if (performance.now() - lastTouch < 5000 || pf.getState() !== 'read') return;
     const i = pf.getCurrentPageIndex(), n = pf.getPageCount();
     if (i >= n - 2) dir = -1; else if (i <= 0) dir = 1;
-    dir > 0 ? pf.flipNext('top') : pf.flipPrev('top');
+    dir > 0 ? goNext() : goPrev();
   }, 3000);
 }
 
@@ -636,30 +669,43 @@ function drawPhone() {
   recv.style.top = (L - 2) + 'px';
   hang.style.transform = `rotate(${phy.a}deg)`;
 }
-let tiltA = 0, lastAx = null, phoneVisible = false;
-addEventListener('deviceorientation', e => { if (e.gamma != null) tiltA = clamp(-e.gamma * .5, -18, 18); });
+let tiltA = 0, phoneVisible = false, gSign = 0, gx = 0, gy = 0;
+const A_MIN = -7, A_MAX = 26;   // never swings into the text on the right; on the left it just goes out of the frame
 addEventListener('devicemotion', e => {
-  const a = e.accelerationIncludingGravity;
-  if (!a || a.x == null) return;
-  if (lastAx != null && phoneVisible) phy.va += clamp((a.x - lastAx) * 2, -15, 15);
-  lastAx = a.x;
+  const g = e.accelerationIncludingGravity;
+  if (!g || g.x == null || g.y == null) return;
+  // iPhone and Android report the axes with opposite signs: learn it from the first upright readings
+  if (!gSign && Math.abs(g.y) > 4) gSign = g.y > 0 ? 1 : -1;
+  const sg = gSign || (/iPhone|iPad|iPod/.test(navigator.userAgent) ? -1 : 1);
+  gx += (g.x * sg - gx) * .2; gy += (g.y * sg - gy) * .2;          // low-pass
+  const inPlane = Math.hypot(gx, gy);
+  const orient = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+  let a = Math.atan2(gx, gy) * 180 / Math.PI - orient;              // where "down" is on the screen
+  a = ((a + 540) % 360) - 180;
+  const weight = clamp((inPlane - 2) / 6);                           // phone lying flat: no in-plane gravity
+  tiltA = clamp(a * weight, A_MIN, A_MAX);
+  const lin = e.acceleration;                                        // shakes give a small kick
+  if (lin && lin.x != null && phoneVisible) phy.va += clamp(-lin.x * sg * 1.2, -12, 12);
 });
-document.getElementById('phone').addEventListener('touchend', function ask() {
-  const D = window.DeviceOrientationEvent, M = window.DeviceMotionEvent;
-  if (D && typeof D.requestPermission === 'function') D.requestPermission().catch(() => {});
+function askMotion() {
+  const M = window.DeviceMotionEvent;
   if (M && typeof M.requestPermission === 'function') M.requestPermission().catch(() => {});
-  this.removeEventListener('touchend', ask);
-}, { passive: true });
+}
+document.getElementById('phone').addEventListener('touchend', function ask() { askMotion(); this.removeEventListener('touchend', ask); }, { passive: true });
+recv.style.pointerEvents = 'auto';
+recv.addEventListener('click', () => { askMotion(); phy.va += 60; phy.vy += 120; });
 function stepPhone(dt) {
   const ds = clamp(scrollY - lastScroll, -120, 120); lastScroll = scrollY;
-  if (!phoneVisible) { phy.y = phy.vy = phy.va = 0; phy.a = tiltA; return; }
+  if (!phoneVisible) { phy.y = phy.vy = phy.va = 0; phy.a = clamp(tiltA, A_MIN, A_MAX); return; }
   // inertia: page moves, receiver lags behind and swings
   phy.vy += ds * 5; phy.va += ds * .3 * (Math.sin(performance.now() / 300) > 0 ? 1 : -.6);
   const k = 38, c = 4.2, ka = 22, ca = 2.6;
   phy.vy += (-k * phy.y - c * phy.vy) * dt;
   phy.va += (-ka * (phy.a - tiltA) - ca * phy.va) * dt;
   phy.y = clamp(phy.y + phy.vy * dt, -innerWidth * .25, innerWidth * .45);
-  phy.a = clamp(phy.a + phy.va * dt, -20, 20);
+  phy.a = phy.a + phy.va * dt;
+  if (phy.a < A_MIN) { phy.a = A_MIN; phy.va = Math.abs(phy.va) * .3; }   // soft stop before the text
+  if (phy.a > A_MAX + 10) { phy.a = A_MAX + 10; phy.va = -Math.abs(phy.va) * .3; }
 }
 
 /* ================= main loop ================= */
