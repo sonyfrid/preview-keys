@@ -30,6 +30,9 @@ section{position:relative;width:100%}
 .hl-wrap{position:relative;display:inline-block;width:92%}
 .hl-img{width:100%;height:auto}
 .headline.glint .hl-img{animation:flick 3s ease-in-out both}
+.hl-bit{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;pointer-events:none;filter:brightness(2.3) saturate(.8) drop-shadow(0 0 6px #fff4dc)}
+.headline.glint .hl-bit{animation:bitflash var(--bd,.6s) ease-in-out var(--bt,0s) 2 alternate both}
+@keyframes bitflash{0%{opacity:0}45%{opacity:1}100%{opacity:0}}
 .headline .shine{position:absolute;inset:0;pointer-events:none;opacity:0;
   background:linear-gradient(105deg,transparent 38%,rgba(255,248,232,.95) 48%,#fff 50%,rgba(255,248,232,.95) 52%,transparent 62%);
   background-size:300% 100%;background-position:120% 0;
@@ -133,9 +136,9 @@ section{position:relative;width:100%}
 .hang{position:absolute;left:19%;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
 .hang svg{position:absolute;left:-30px;top:0;overflow:visible}
 .hang img{position:absolute;width:calc(var(--col)*.23);max-width:none}
-.ready{position:absolute;left:53%;top:46%;color:#5b0d14;z-index:2}
-.ready .a{font-family:'Playfair Display',serif;font-size:calc(var(--col)*.18);line-height:.98;letter-spacing:.01em}
-.ready .r{font-family:'Great Vibes',cursive;font-size:calc(var(--col)*.17);line-height:.7;margin-left:-4%}
+.ready-txt{position:absolute;left:53%;top:46%;color:#5b0d14;z-index:2}
+.ready-txt .a{font-family:'Playfair Display',serif;font-size:calc(var(--col)*.18);line-height:.98;letter-spacing:.01em}
+.ready-txt .r{font-family:'Great Vibes',cursive;font-size:calc(var(--col)*.17);line-height:.7;margin-left:-4%}
 .contacts{padding:0 8%;color:#2a0d0f}
 .contacts h2{font-family:'Bad Script',cursive;font-weight:400;font-size:calc(var(--col)*.12);text-transform:uppercase;margin:0 0 4%;color:#1a0c0c}
 .cblock{border-top:1px solid rgba(76,10,18,.25);padding:16px 0}
@@ -154,7 +157,7 @@ section{position:relative;width:100%}
 <section id="hero">
   <div class="sticky">
     <img class="face" src="assets/face.webp" alt="Юлия Гнедчик">
-    <h1 class="headline" id="headline"><span class="hl-wrap"><img class="hl-img" src="assets/title_yulia.webp" alt="Твои ключи к модельной славе"><span class="shine"></span></span></h1>
+    <h1 class="headline" id="headline"><span class="hl-wrap"><img class="hl-img" src="assets/title_yulia.webp" alt="Твои ключи к модельной славе"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 82.11% 48.78% 10.06%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 74.72% 48.78% 17.89%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 67.17% 48.78% 25.61%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 60.28% 48.78% 32.83%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 50.67% 48.78% 42.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 44.44% 48.78% 49.33%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 41.44% 48.78% 55.56%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 32.06% 48.78% 58.56%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 26.06% 48.78% 67.94%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 21.5% 48.78% 73.94%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 9.78% 48.78% 81.67%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 91.39% 0.0% 0.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 83.28% 0.0% 9.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 77.56% 0.0% 16.72%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 70.28% 0.0% 22.44%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 64.44% 0.0% 29.72%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 58.44% 0.0% 36.22%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 50.61% 0.0% 42.06%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 42.94% 0.0% 50.44%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 34.5% 0.0% 57.06%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 27.0% 0.0% 66.11%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 20.17% 0.0% 73.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 14.0% 0.0% 79.83%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 8.06% 0.0% 86.44%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 0.0% 0.0% 91.94%)"><span class="shine"></span></span></h1>
     <canvas id="curtains"></canvas>
   </div>
 </section>
@@ -222,7 +225,7 @@ section{position:relative;width:100%}
       <svg id="cord" width="60" height="10"></svg>
       <img id="receiver" src="assets/receiver.webp" alt="">
     </div>
-    <div class="ready"><div class="a">ARE<br>YOU</div><div class="r">ready</div></div>
+    <div class="ready-txt"><div class="a">ARE<br>YOU</div><div class="r">ready</div></div>
   </div>
   <div class="contacts">
     <h2>Контакты</h2>
@@ -294,6 +297,7 @@ const khURI = s => 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
 /* ================= 1. headline glint ================= */
 const hl = document.getElementById('headline');
 {
+  hl.querySelectorAll('.hl-bit').forEach(b => { b.style.setProperty('--bt', (Math.random() * 2.1).toFixed(2) + 's'); b.style.setProperty('--bd', (.25 + Math.random() * .3).toFixed(2) + 's'); });
   const start = () => { hl.classList.remove('glint'); void hl.offsetWidth; hl.classList.add('glint'); };
   const img = hl.querySelector('img');
   img.complete ? start() : img.addEventListener('load', start);
@@ -481,7 +485,7 @@ async function openDoor(d) {
   if (anim) return; anim = true;
   const b = d.el.getBoundingClientRect();
   const W = innerWidth, H = innerHeight;
-  zoomBase = { r: { x: b.x, y: b.y, w: b.width, h: b.height }, W, H, smax: 5 * Math.max(W, H) / (b.width * .09) };
+  zoomBase = { r: { x: b.x, y: b.y, w: b.width, h: b.height }, W, H, smax: 3.2 * Math.max(W, H) / (b.width * .09) };
   dvDoor.src = d.src;
   document.getElementById('dvTitle').textContent = `Дверь 0${d.n}`;
   setRect(dvDoor, zoomBase.r);
@@ -489,11 +493,16 @@ async function openDoor(d) {
   zoomTo(0);
   dv.classList.add('on'); document.body.style.overflow = 'hidden';
   await animate(2600, 0, 1, zoomTo);
+  // keyhole now covers everything: show the info screen without the huge mask (mobile browsers drop giant masks)
+  dvInfo.style.webkitMaskImage = dvInfo.style.maskImage = 'none';
+  dvDoor.style.visibility = 'hidden'; dvRim.style.visibility = 'hidden';
   dv.classList.add('ready'); anim = false;
 }
 async function closeDoor(instant) {
   if (anim) return; anim = true;
   dv.classList.remove('ready');
+  dvInfo.style.webkitMaskImage = dvInfo.style.maskImage = '';
+  dvDoor.style.visibility = ''; dvRim.style.visibility = '';
   if (!instant && zoomBase) {
     const b = doorsData[cur].el.getBoundingClientRect();
     zoomBase.r = { x: b.x, y: b.y, w: b.width, h: b.height };
