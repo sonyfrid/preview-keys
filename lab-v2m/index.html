@@ -558,7 +558,7 @@ function drawLine(dt) {
 document.querySelectorAll('.ltrack').forEach(tr => {
   const a = +tr.dataset.from, b = +tr.dataset.to;
   let h = '';
-  for (let i = a; i < b; i++) h += `<img src="assets/logo_${String(i).padStart(2, '0')}.webp" alt="" loading="lazy">`;
+  for (let i = a; i < b; i++) h += `<img src="assets/logo_${String(i).padStart(2, '0')}.webp" alt="" decoding="async">`;
   tr.innerHTML = h + h;
 });
 
