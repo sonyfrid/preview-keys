@@ -33,7 +33,7 @@ section{position:relative;width:100%}
   background:linear-gradient(100deg,rgba(255,240,220,0) 0%,rgba(255,240,220,0) 30%,rgba(255,225,205,.45) 44%,rgba(255,240,225,.7) 50%,rgba(255,225,205,.45) 56%,rgba(255,240,220,0) 70%,rgba(255,240,220,0) 100%);
   background-size:250% 100%;background-position:130% 0;
   -webkit-mask-image:url(assets/title_yulia.webp);mask-image:url(assets/title_yulia.webp);-webkit-mask-size:100% 100%;mask-size:100% 100%}
-.headline.glint .shine{animation:sweep 1.5s cubic-bezier(.45,0,.55,1) 2 both}
+.headline.glint .shine{animation:sweep 2s cubic-bezier(.45,0,.55,1) 1 both}
 @keyframes sweep{0%{background-position:130% 0;opacity:1}100%{background-position:-30% 0;opacity:1}}
 .headline.glint.done .shine{opacity:0;animation:none}
 #curtains{position:absolute;left:0;top:0;width:100%;height:calc(var(--ftop) + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
@@ -87,7 +87,9 @@ section{position:relative;width:100%}
 /* ---------- 5. japan ---------- */
 #japan{height:calc(var(--col)*.98);overflow:hidden;background:var(--beige)}
 .pline{position:absolute;inset:0;touch-action:pan-y;user-select:none}
-.pline img{position:absolute;top:50%;object-fit:cover;will-change:transform,width,height}
+.pline img{position:absolute;left:0;top:0;object-fit:cover;transform-origin:0 50%;will-change:transform;backface-visibility:hidden}
+.pline{opacity:0;transition:opacity .5s}
+.pline.ready{opacity:1}
 @keyframes run{to{transform:translateX(-50%)}}
 
 /* ---------- 6/9. video ---------- */
@@ -168,9 +170,9 @@ section{position:relative;width:100%}
 
 <!-- 4. About -->
 <section id="about">
-  <h2 class="about-h"><img src="assets/about_yulia.webp" alt="Обо мне"></h2>
-  <p class="about-t"><img src="assets/about_text.webp" alt="Меня зовут Юлия Гнедчик. В модельной индустрии работаю уже 15 лет и знаю всю изнанку модельного мира. Два года являлась директором московского модельного агентства. На постоянной основе работаю скаутом для российских агентств. Имею связи по всему миру. Работала в Японии на контракте, во Франции и Дубае на дайрект съёмках."></p>
-  <img class="about-p" src="assets/about.webp" alt="Юлия Гнедчик">
+  <h2 class="about-h"><img src="assets/about_yulia.webp" decoding="async" alt="Обо мне"></h2>
+  <p class="about-t"><img src="assets/about_text.webp" loading="lazy" decoding="async" alt="Меня зовут Юлия Гнедчик. В модельной индустрии работаю уже 15 лет и знаю всю изнанку модельного мира. Два года являлась директором московского модельного агентства. На постоянной основе работаю скаутом для российских агентств. Имею связи по всему миру. Работала в Японии на контракте, во Франции и Дубае на дайрект съёмках."></p>
+  <img class="about-p" src="assets/about.webp" loading="lazy" decoding="async" alt="Юлия Гнедчик">
 </section>
 
 <!-- 5. Japan -->
@@ -209,7 +211,7 @@ section{position:relative;width:100%}
   <div class="ph-top">
     <div class="hang" id="hang">
       <svg id="cord" width="60" height="10"></svg>
-      <img id="receiver" src="assets/receiver.webp" alt="">
+      <img id="receiver" src="assets/receiver.webp" loading="lazy" decoding="async" alt="">
     </div>
     <div class="ready-txt"><div class="a">ARE<br>YOU</div><div class="r">ready</div></div>
   </div>
@@ -283,7 +285,7 @@ const khURI = s => 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
 /* ================= 1. headline glint ================= */
 const hl = document.getElementById('headline');
 {
-  const start = () => { hl.classList.remove('glint', 'done'); void hl.offsetWidth; hl.classList.add('glint'); setTimeout(() => hl.classList.add('done'), 3050); };
+  const start = () => { hl.classList.remove('glint', 'done'); void hl.offsetWidth; hl.classList.add('glint'); setTimeout(() => hl.classList.add('done'), 2050); };
   const img = hl.querySelector('img');
   img.complete ? start() : img.addEventListener('load', start);
 }
@@ -384,7 +386,7 @@ let cur = 0;
 doorsData.forEach((d, i) => {
   const el = document.createElement('div');
   el.className = 'door';
-  el.innerHTML = `<img src="${d.src}" alt="Дверь 0${d.n}"><img class="khole" src="assets/kh_icon.webp" alt="">
+  el.innerHTML = `<img src="${d.src}" alt="Дверь 0${d.n}" loading="lazy" decoding="async"><img class="khole" src="assets/kh_icon.webp" alt="">
     <div class="hint">двери можно<br><b>←</b>перелистывать<b>→</b></div><div class="lbl">Дверь 0${d.n}</div>`;
   d.el = el; collage.appendChild(el);
 });
@@ -504,10 +506,12 @@ document.getElementById('dvBuy').onclick = async () => {
 
 /* ================= 5. photo line ================= */
 const pline = document.getElementById('pline');
-const LINE = [1, 2, 3, 4, 5].map(i => ({ src: `assets/line_${i}.webp`, a: .75 }));
-LINE.forEach(it => { const im = new Image(); im.onload = () => { it.a = im.naturalWidth / im.naturalHeight; }; im.src = it.src; });
+const LINE = [.7463, .8264, .7463, .7308, .7426].map((a, i) => ({ src: `assets/line_${i + 1}.webp`, a }));
 const COPIES = 3, lineEls = [];
-for (let c = 0; c < COPIES; c++) LINE.forEach(it => { const im = document.createElement('img'); im.src = it.src; im.alt = ''; im.draggable = false; pline.appendChild(im); lineEls.push(im); });
+for (let c = 0; c < COPIES; c++) LINE.forEach(it => { const im = document.createElement('img'); im.src = it.src; im.alt = ''; im.draggable = false; im.decoding = 'async'; pline.appendChild(im); lineEls.push(im); });
+let lineReady = false, lineBH = 0;
+Promise.all(lineEls.slice(0, LINE.length).map(im => (im.decode ? im.decode() : Promise.resolve()).catch(() => {})))
+  .then(() => { lineReady = true; pline.classList.add('ready'); });
 const fsz = u => 1 / (1 + .42 * Math.pow(Math.abs(u), 1.25));
 const Fint = (a, b) => { let t = 0; const n = 24, h = (b - a) / n; for (let i = 0; i < n; i++) t += fsz(a + (i + .5) * h) * h; return t; };
 const Fx = u => u >= 0 ? Fint(0, u) : -Fint(u, 0);
@@ -524,13 +528,18 @@ addEventListener('pointermove', e => {
 addEventListener('pointerup', () => { lineDrag = null; });
 addEventListener('pointercancel', () => { lineDrag = null; });
 function drawLine(dt) {
+  if (!lineReady) return;
   const W = pline.clientWidth, H = pline.clientHeight;
   const bh = H * .9, L = W * .46;
+  if (bh !== lineBH) {                              // fixed box per photo; size changes only via transform
+    lineBH = bh;
+    lineEls.forEach((el, n) => { const it = LINE[n % LINE.length]; el.style.width = (bh * it.a) + 'px'; el.style.height = bh + 'px'; });
+  }
   const auto = W * .16;
   lineIdle += dt;
   if (!lineDrag) {
-    lineV *= Math.pow(.05, dt);                   // inertia after a swipe
-    const k = clamp((lineIdle - 1.2) / 1.5);       // auto speed comes back after a pause
+    lineV *= Math.pow(.05, dt);
+    const k = clamp((lineIdle - 1.2) / 1.5);
     lineOff += (lineV + auto * k) * dt;
   }
   const widths = LINE.map(it => bh * it.a);
@@ -544,12 +553,13 @@ function drawLine(dt) {
       const x0 = W / 2 + L * Fx(e / L), x1 = W / 2 + L * Fx((e + widths[i]) / L);
       const mid = (e + widths[i] / 2) / L;
       e += widths[i];
-      if (x1 < -2 || x0 > W + 2) { el.style.display = 'none'; return; }
-      el.style.display = '';
-      const hh = bh * fsz(mid);
-      el.style.left = x0 + 'px'; el.style.width = (x1 - x0 + .5) + 'px';
-      el.style.height = hh + 'px'; el.style.transform = 'translateY(-50%)';
-      el.style.zIndex = 10 - Math.round(Math.abs(mid));
+      const vis = !(x1 < -2 || x0 > W + 2);
+      if (el._vis !== vis) { el.style.visibility = vis ? '' : 'hidden'; el._vis = vis; }
+      if (!vis) return;
+      const sx = (x1 - x0 + .5) / widths[i], sy = fsz(mid);
+      el.style.transform = `translate3d(${x0.toFixed(2)}px, ${((H - bh) / 2).toFixed(2)}px, 0) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+      const z = 10 - Math.round(Math.abs(mid));
+      if (el._z !== z) { el.style.zIndex = z; el._z = z; }
     });
   }
 }
