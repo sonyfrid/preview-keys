@@ -652,14 +652,29 @@ function drawLine(dt) {
   // swipes from the library use the same animations
   pf.flipNext = () => setTimeout(goNext, 0);
   pf.flipPrev = () => setTimeout(goPrev, 0);
+  // the library gets stuck in "user_fold" when a page is pulled where there is nothing to turn to (first/last page)
+  const fc = pf.getFlipController ? pf.getFlipController() : pf.flipController;
+  function unstick() {
+    if (simBusy) return;
+    if (pf.getState() !== 'read' && (!fc || fc.calc === null)) { try { fc.setState('read'); } catch (e) {} }
+  }
+  addEventListener('touchend', () => setTimeout(unstick, 30), { passive: true });
+  addEventListener('mouseup', () => setTimeout(unstick, 30));
   // any rightward drag (slow too) = previous page; the library only counts very fast swipes
   let tStart = null;
-  clip.addEventListener('touchstart', e => { const t = e.touches[0]; tStart = { x: t.clientX, y: t.clientY }; }, { passive: true });
+  clip.addEventListener('touchstart', e => {
+    const t = e.touches[0]; tStart = { x: t.clientX, y: t.clientY };
+    // left half of the page: the library would turn the page FORWARD on a rightward pull, so it does not get these touches
+    const r = clip.getBoundingClientRect();
+    if (t.clientX < r.left + r.width * .5) e.stopPropagation();
+  }, { capture: true, passive: true });
+  clip.addEventListener('mousedown', e => { const r = clip.getBoundingClientRect(); if (e.clientX < r.left + r.width * .5) e.stopPropagation(); }, { capture: true });
   clip.addEventListener('touchend', e => {
     if (!tStart) return;
     const t = e.changedTouches[0], dx = t.clientX - tStart.x, dy = t.clientY - tStart.y; tStart = null;
     if (Math.abs(dx) < 35 || Math.abs(dx) < Math.abs(dy)) return;
     setTimeout(() => {
+      unstick();
       if (simBusy || pf.getState() !== 'read') return;
       if (dx > 0) goPrev();
       else if (pf.getCurrentPageIndex() < pf.getPageCount() - 2) goNext();
@@ -671,6 +686,7 @@ function drawLine(dt) {
   setInterval(() => {
     const r = clip.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight || simBusy) return;
+    unstick();
     if (performance.now() - lastTouch < 5000 || pf.getState() !== 'read') return;
     const i = pf.getCurrentPageIndex(), n = pf.getPageCount();
     if (i >= n - 2) dir = -1; else if (i <= 0) dir = 1;
