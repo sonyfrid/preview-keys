@@ -29,27 +29,13 @@ section{position:relative;width:100%}
 .headline{position:absolute;left:0;right:0;top:calc(var(--ftop) + var(--col) * 1.03);text-align:center;margin:0}
 .hl-wrap{position:relative;display:inline-block;width:92%}
 .hl-img{width:100%;height:auto}
-.headline.glint .hl-img{animation:flick 3s ease-in-out both}
-.hl-bit{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;pointer-events:none;filter:brightness(2.3) saturate(.8) drop-shadow(0 0 6px #fff4dc)}
-.headline.glint .hl-bit{animation:bitflash var(--bd,.6s) ease-in-out var(--bt,0s) 2 alternate both}
-@keyframes bitflash{0%{opacity:0}45%{opacity:1}100%{opacity:0}}
 .headline .shine{position:absolute;inset:0;pointer-events:none;opacity:0;
-  background:linear-gradient(105deg,transparent 38%,rgba(255,248,232,.95) 48%,#fff 50%,rgba(255,248,232,.95) 52%,transparent 62%);
-  background-size:300% 100%;background-position:120% 0;
+  background:linear-gradient(100deg,rgba(255,240,220,0) 0%,rgba(255,240,220,0) 30%,rgba(255,225,205,.45) 44%,rgba(255,240,225,.7) 50%,rgba(255,225,205,.45) 56%,rgba(255,240,220,0) 70%,rgba(255,240,220,0) 100%);
+  background-size:250% 100%;background-position:130% 0;
   -webkit-mask-image:url(assets/title_yulia.webp);mask-image:url(assets/title_yulia.webp);-webkit-mask-size:100% 100%;mask-size:100% 100%}
-.headline.glint .shine{animation:sweep 3s ease-in-out both}
-@keyframes flick{
-  0%{filter:brightness(1)}
-  8%{filter:brightness(1.9) drop-shadow(0 0 6px #fff2d6)}
-  14%{filter:brightness(1)}
-  27%{filter:brightness(1.6) drop-shadow(0 0 8px #ffe9c4)}
-  33%{filter:brightness(1)}
-  52%{filter:brightness(1.8) drop-shadow(0 0 5px #fff)}
-  58%{filter:brightness(1.05)}
-  74%{filter:brightness(1.4) drop-shadow(0 0 4px #fff3dc)}
-  82%,100%{filter:brightness(1)}
-}
-@keyframes sweep{0%{background-position:120% 0;opacity:1}90%{opacity:1}100%{background-position:-20% 0;opacity:0}}
+.headline.glint .shine{animation:sweep 1.5s cubic-bezier(.45,0,.55,1) 2 both}
+@keyframes sweep{0%{background-position:130% 0;opacity:1}100%{background-position:-30% 0;opacity:1}}
+.headline.glint.done .shine{opacity:0;animation:none}
 #curtains{position:absolute;left:0;top:0;width:100%;height:calc(var(--ftop) + var(--col) * 1.03);pointer-events:none;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
 
 /* ---------- 2. keyhole ---------- */
@@ -157,7 +143,7 @@ section{position:relative;width:100%}
 <section id="hero">
   <div class="sticky">
     <img class="face" src="assets/face.webp" alt="Юлия Гнедчик">
-    <h1 class="headline" id="headline"><span class="hl-wrap"><img class="hl-img" src="assets/title_yulia.webp" alt="Твои ключи к модельной славе"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 82.11% 48.78% 10.06%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 74.72% 48.78% 17.89%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 67.17% 48.78% 25.61%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 60.28% 48.78% 32.83%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 50.67% 48.78% 42.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 44.44% 48.78% 49.33%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 41.44% 48.78% 55.56%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 32.06% 48.78% 58.56%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 26.06% 48.78% 67.94%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 21.5% 48.78% 73.94%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(0.0% 9.78% 48.78% 81.67%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 91.39% 0.0% 0.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 83.28% 0.0% 9.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 77.56% 0.0% 16.72%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 70.28% 0.0% 22.44%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 64.44% 0.0% 29.72%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 58.44% 0.0% 36.22%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 50.61% 0.0% 42.06%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 42.94% 0.0% 50.44%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 34.5% 0.0% 57.06%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 27.0% 0.0% 66.11%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 20.17% 0.0% 73.0%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 14.0% 0.0% 79.83%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 8.06% 0.0% 86.44%)"><img class="hl-bit" src="assets/title_yulia.webp" alt="" style="clip-path:inset(51.22% 0.0% 0.0% 91.94%)"><span class="shine"></span></span></h1>
+    <h1 class="headline" id="headline"><span class="hl-wrap"><img class="hl-img" src="assets/title_yulia.webp" alt="Твои ключи к модельной славе"><span class="shine"></span></span></h1>
     <canvas id="curtains"></canvas>
   </div>
 </section>
@@ -297,8 +283,7 @@ const khURI = s => 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
 /* ================= 1. headline glint ================= */
 const hl = document.getElementById('headline');
 {
-  hl.querySelectorAll('.hl-bit').forEach(b => { b.style.setProperty('--bt', (Math.random() * 2.1).toFixed(2) + 's'); b.style.setProperty('--bd', (.25 + Math.random() * .3).toFixed(2) + 's'); });
-  const start = () => { hl.classList.remove('glint'); void hl.offsetWidth; hl.classList.add('glint'); };
+  const start = () => { hl.classList.remove('glint', 'done'); void hl.offsetWidth; hl.classList.add('glint'); setTimeout(() => hl.classList.add('done'), 3050); };
   const img = hl.querySelector('img');
   img.complete ? start() : img.addEventListener('load', start);
 }
