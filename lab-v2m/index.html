@@ -117,15 +117,15 @@ section{position:relative;width:100%}
 .page .pn{position:absolute;bottom:2%;right:4%;font-family:'Playfair Display',serif;font-size:12px;color:#fff;mix-blend-mode:difference}
 
 /* ---------- 10. phone + contacts ---------- */
-#phone{overflow:hidden;padding-bottom:12%}
-.ph-top{position:relative;height:calc(var(--col)*1.22);overflow:hidden}
+#phone{overflow-x:clip;overflow-y:visible;padding-bottom:12%}
+.ph-top{position:relative;height:calc(var(--col)*1.22);overflow:visible;z-index:5}
 .hang{position:absolute;left:19%;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
 .hang svg{position:absolute;left:-30px;top:0;overflow:visible}
 .hang img{position:absolute;width:calc(var(--col)*.23);max-width:none}
 .ready-txt{position:absolute;left:53%;top:46%;color:#5b0d14;z-index:2}
 .ready-txt .a{font-family:'Playfair Display',serif;font-size:calc(var(--col)*.18);line-height:.98;letter-spacing:.01em}
 .ready-txt .r{font-family:'Great Vibes',cursive;font-size:calc(var(--col)*.17);line-height:.7;margin-left:-4%}
-.contacts{padding:0 8%;color:#2a0d0f}
+.contacts{position:relative;z-index:1;padding:0 8%;color:#2a0d0f}
 .contacts h2{font-family:'Bad Script',cursive;font-weight:400;font-size:calc(var(--col)*.12);text-transform:uppercase;margin:0 0 4%;color:#1a0c0c}
 .cblock{border-top:1px solid rgba(76,10,18,.25);padding:16px 0}
 .cblock h4{font-weight:400;font-size:20px;color:#5b0d14;margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
