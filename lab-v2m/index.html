@@ -616,6 +616,19 @@ document.querySelectorAll('.ltrack').forEach(tr => {
   // swipes from the library use the same animations
   pf.flipNext = () => setTimeout(goNext, 0);
   pf.flipPrev = () => setTimeout(goPrev, 0);
+  // any rightward drag (slow too) = previous page; the library only counts very fast swipes
+  let tStart = null;
+  clip.addEventListener('touchstart', e => { const t = e.touches[0]; tStart = { x: t.clientX, y: t.clientY }; }, { passive: true });
+  clip.addEventListener('touchend', e => {
+    if (!tStart) return;
+    const t = e.changedTouches[0], dx = t.clientX - tStart.x, dy = t.clientY - tStart.y; tStart = null;
+    if (Math.abs(dx) < 35 || Math.abs(dx) < Math.abs(dy)) return;
+    setTimeout(() => {
+      if (simBusy || pf.getState() !== 'read') return;
+      if (dx > 0) goPrev();
+      else if (pf.getCurrentPageIndex() < pf.getPageCount() - 2) goNext();
+    }, 60);
+  }, { passive: true });
   book.addEventListener('pointerdown', () => { lastTouch = performance.now(); });
   book.addEventListener('touchstart', () => { lastTouch = performance.now(); }, { passive: true });
   pf.on('changeState', e => { if (e.data !== 'read') lastTouch = performance.now(); });
