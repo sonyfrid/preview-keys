@@ -99,10 +99,9 @@ section{position:relative;width:100%}
 
 /* ---------- 7. logos ---------- */
 #logos{padding:7% 0 2%;display:flex;flex-direction:column;gap:22px;justify-content:center}
-.lrow{overflow:hidden;width:100%}
-.lrow .ltrack{display:flex;gap:26px;width:max-content;animation:run 45s linear infinite}
-.lrow.rev .ltrack{animation-direction:reverse}
-.ltrack img{width:calc(var(--col)*.34);aspect-ratio:4/3;object-fit:cover;filter:grayscale(1) contrast(1.1);border:1px solid rgba(76,10,18,.25)}
+.lrow{overflow:hidden;width:100%;position:relative;height:calc(var(--col)*.255)}
+.ltrack{position:absolute;inset:0}
+.ltrack img{position:absolute;left:0;top:0;width:calc(var(--col)*.34);height:calc(var(--col)*.255);object-fit:cover;border:1px solid rgba(76,10,18,.25);will-change:transform;backface-visibility:hidden}
 
 /* ---------- 8. journal ---------- */
 #journal{display:flex;align-items:center;justify-content:center;padding:5% 0 6%}
@@ -189,9 +188,9 @@ section{position:relative;width:100%}
 
 <!-- 7. Logos -->
 <section id="logos">
-  <div class="lrow"><div class="ltrack" data-from="0" data-to="13"></div></div>
-  <div class="lrow rev"><div class="ltrack" data-from="13" data-to="26"></div></div>
-  <div class="lrow"><div class="ltrack" data-from="26" data-to="39"></div></div>
+  <div class="lrow"><div class="ltrack"></div></div>
+  <div class="lrow rev"><div class="ltrack"></div></div>
+  <div class="lrow"><div class="ltrack"></div></div>
 </section>
 
 <!-- 8. Journal -->
@@ -565,12 +564,39 @@ function drawLine(dt) {
 }
 
 /* ================= 7. logos ================= */
-document.querySelectorAll('.ltrack').forEach(tr => {
-  const a = +tr.dataset.from, b = +tr.dataset.to;
-  let h = '';
-  for (let i = a; i < b; i++) h += `<img src="assets/logo_${String(i).padStart(2, '0')}.webp" alt="" decoding="async">`;
-  tr.innerHTML = h + h;
-});
+// few tiles per row, recycled while moving: no giant layers (iPhone does not paint very wide moving strips)
+{
+  const ALL = [...Array(39).keys()].filter(i => i !== 2);          // logo 02 was a piece of a face
+  const per = Math.ceil(ALL.length / 3);
+  const rows = [...document.querySelectorAll('.ltrack')].map((tr, r) => {
+    const list = ALL.slice(r * per, r * per + per).map(i => `assets/logo_${String(i).padStart(2, '0')}.webp`);
+    list.forEach(src => { const im = new Image(); im.src = src; });   // warm the cache
+    const slots = [];
+    for (let k = 0; k < 6; k++) { const im = document.createElement('img'); im.alt = ''; im.decoding = 'async'; tr.appendChild(im); slots.push(im); }
+    return { tr, list, slots, dir: r % 2 ? 1 : -1, off: r * 37 };
+  });
+  const sec = document.getElementById('logos');
+  let last = performance.now();
+  const step = now => {
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    const r = sec.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < innerHeight) {
+      rows.forEach(row => {
+        const tw = row.slots[0].offsetWidth || 120, pitch = tw + 26, n = row.list.length;
+        row.off += row.dir * dt * pitch / 1.75;                       // ~ one logo per 1.75 s
+        const first = Math.floor(-row.off / pitch);
+        row.slots.forEach((im, k) => {
+          const idx = first + k;
+          const src = row.list[((idx % n) + n) % n];
+          if (im._src !== src) { im.src = src; im._src = src; }
+          im.style.transform = `translate3d(${(idx * pitch + row.off).toFixed(2)}px,0,0)`;
+        });
+      });
+    }
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 
 /* ================= 8. journal ================= */
 {
